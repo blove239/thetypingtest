@@ -1,0 +1,20 @@
+.testInput {
+    border: 1px solid red;
+    height: 25h;
+    width: 800px;
+    margin: auto;
+    bottom: 0;
+    position: relative;
+
+}
+
+.input {
+    background-color: transparent;
+    text-align: center;
+    text-align-last: auto;
+    color: #c01717;
+    width: 100%;
+    height: 100%;
+    font-size: 26pt;
+}
+

@@ -1,0 +1,26 @@
+.wordGen {
+    border: 1px solid red;
+    height: 25vh;
+    width: 800px;
+    margin: auto;
+    bottom: 0;
+    position: relative;
+    overflow:auto;
+    font-size: 26pt;
+}
+
+ul
+{
+list-style-type: none;
+padding: 0;
+margin: 0;
+text-align: right;
+width: 10em;
+}
+
+li
+{
+    margin: 0 10px;
+    display: inline-block;
+}
+
