@@ -9,18 +9,18 @@
     font-size: 26pt;
 }
 
-ul
-{
-list-style-type: none;
-padding: 0;
-margin: 0;
-text-align: right;
-width: 10em;
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: right;
+    width: 10em;
 }
 
-li
-{
-    margin: 0 10px;
+
+li {
+    margin: 0 7px;
     display: inline-block;
 }
 

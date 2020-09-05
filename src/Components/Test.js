@@ -25,9 +25,9 @@ class Test extends Component {
       <div style={{ margin: '20px 0 20px 20px' }}>
         <hr />
         <input type="text" 
-        value={this.props.inputVal}
-        onChange={this.onInputChange}
-        style={{ margin: '0 10px' }} />
+        value = { this.props.inputVal }
+        onChange = { this.onInputChange }
+        style = {{ margin: '0 10px' }} />
       </div>
     );
   }

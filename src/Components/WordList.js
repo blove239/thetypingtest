@@ -8,22 +8,32 @@ let testWords = randomWords({ exactly:250 });
 class WordList extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {wordList: []};
+        this.state = {wordList: testWords.map((x, index) => this.renderWord(index,x))};
     }
 
-    renderWord(i) {
+// PROPS FROM APP
+// this.props.userInput
+// this.props.currentWord
+
+    renderWord(key, i) {
         return (
             <Word
-                value={i}
+                key = { key }
+                word = { i }
             />
         )
     }
-  
+
+    currentWordList = () => {
+        let currentWord = this.state.wordList[this.props.currentWord].state.word
+        this.props.currentWord(currentWord);
+    }
+
     render() {
         return (
         <div className="wordGen">
-            {testWords.map(x => this.renderWord(x))}   
+            { this.state.wordList }
+            currentWord = { this.currentWordList }
         </div>
         );
       }
