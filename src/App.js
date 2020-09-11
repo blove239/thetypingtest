@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super();
     this.state = {
-      currentInput: ' ',
+      currentInput: " ",
       currentWord: 0,
       userInputWords: []
     }
@@ -78,9 +78,8 @@ class App extends Component {
     return (
       <div style={{ width: 500, margin: 50 }}>
         <WordList 
-          userInput={ this.state.currentInput }
-          wordList = { this.currentWord }
-          currentWord = { this.wordList }
+          currentWord = { this.state.currentWord }
+          currentInput = { this.state.currentInput }
         />
 
         <Test 

@@ -2,38 +2,39 @@ import React, { Component } from 'react';
 import Word from './Word';
 import '../css/wordlist.css';
 
-const randomWords = require('random-words');
-let testWords = randomWords({ exactly:250 });
-
 class WordList extends Component {
     constructor(props) {
         super(props);
-        this.state = {wordList: testWords.map((x, index) => this.renderWord(index,x))};
+        const randomWords = require('random-words');
+        let testWords = randomWords({ exactly: 250 }).map((x) => {
+            return ({word:x,
+                isCurrentWord: false})
+             });
+        testWords[0] = {word:testWords[0].word,isCurrentWord:true}
+        
+        this.state = { wordList: testWords }   
     }
 
 // PROPS FROM APP
-// this.props.userInput
-// this.props.currentWord
+// this.props.userInput (string for representing users current input)
+// this.props.currentWord (int for which word user is on)
 
-    renderWord(key, i) {
+    renderWord(key, word, isCurrent) {
         return (
             <Word
                 key = { key }
-                word = { i }
+                word = { word }
+                currentInput = { this.props.currentInput }
+                isCurrentWord = { isCurrent }
             />
         )
-    }
-
-    currentWordList = () => {
-        let currentWord = this.state.wordList[this.props.currentWord].state.word
-        this.props.currentWord(currentWord);
     }
 
     render() {
         return (
         <div className="wordGen">
-            { this.state.wordList }
-            currentWord = { this.currentWordList }
+            { this.state.wordList.map((x, index) =>
+             this.renderWord(index,x.word, x.isCurrentWord)) }
         </div>
         );
       }
