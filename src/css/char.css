@@ -1,0 +1,12 @@
+.correctChar {
+    color: #0400ff
+}
+
+.incorrectChar {
+    color: #ff0000;
+    text-decoration: line-through;
+}
+
+.default {
+    color: #000000;
+}

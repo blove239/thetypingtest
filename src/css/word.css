@@ -1,17 +1,5 @@
-.default {
-    color: #000000;
-}
 
 .currentWord {
     color: #000000;
     background: rgba(76, 175, 80, 0.3);
-}
-
-.correctChar {
-    color: #0400ff
-}
-
-.incorrectChar {
-    color: #ff0000;
-    text-decoration: line-through;
 }

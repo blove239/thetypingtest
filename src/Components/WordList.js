@@ -6,7 +6,7 @@ class WordList extends Component {
     constructor(props) {
         super(props);
         const randomWords = require('random-words');
-        let testWords = randomWords({ exactly: 250 }).map((x) => {
+        let testWords = randomWords({ exactly: 4 }).map((x) => {
             return ({word:x,
                 isCurrentWord: false})
              });
@@ -23,9 +23,11 @@ class WordList extends Component {
         return (
             <Word
                 key = { key }
+                listId = { key }
                 word = { word }
                 currentInput = { this.props.currentInput }
                 isCurrentWord = { isCurrent }
+                currentWordNum = { this.props.currentWordNum }
             />
         )
     }
@@ -34,7 +36,7 @@ class WordList extends Component {
         return (
         <div className="wordGen">
             { this.state.wordList.map((x, index) =>
-             this.renderWord(index,x.word, x.isCurrentWord)) }
+             this.renderWord(index+1,x.word, x.isCurrentWord)) }
         </div>
         );
       }

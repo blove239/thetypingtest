@@ -9,7 +9,7 @@ class App extends Component {
     super();
     this.state = {
       currentInput: " ",
-      currentWord: 0,
+      currentWordNum: 0,
       userInputWords: []
     }
     this.onInputChange = this.onInputChange.bind(this);
@@ -26,7 +26,7 @@ class App extends Component {
         this.setState({           // return the previous word in inputWords, among other things
           userInputWords : this.state.userInputWords.slice(0, -1), //removes last item from list
           currentInput   : this.state.userInputWords.slice(-1)[0], // sets current input to previous typed word
-          currentWord    : this.state.currentWord - 1
+          currentWordNum    : this.state.currentWordNum - 1
           });
         }
     } 
@@ -39,7 +39,7 @@ class App extends Component {
   onSpacebar(){
     this.setState(prevState => ({
       userInputWords  : [...prevState.userInputWords, this.state.currentInput],
-      currentWord: this.state.currentWord + 1,
+      currentWordNum: this.state.currentWordNum + 1,
       currentInput : ' '
     })
   )
@@ -78,7 +78,7 @@ class App extends Component {
     return (
       <div style={{ width: 500, margin: 50 }}>
         <WordList 
-          currentWord = { this.state.currentWord }
+          currentWordNum = { this.state.currentWordNum }
           currentInput = { this.state.currentInput }
         />
 
