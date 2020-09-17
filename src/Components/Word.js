@@ -14,21 +14,15 @@ class Word extends Component {
                 key: characterIndex });
             characterIndex += 1;
         }
-        this.state = { 
-            charIndex: characterIndex, //unique index number tracker for Char components
+        this.state = {
             chars: charList //list of chars for each word
-        }   
+        }
     }
-    //pretty sure you'll need a state to keep
-    // track of unique keys for ind chars
-
-    renderChar(key, char, style) {
 //PROPS
 // FROM APP currentInput, currentWordNum
-// FROM WORDLIST isCurrentWord & word
+// FROM WORDLIST listId, word, currentInput, isCurrentWord, currentWordNum, currentCharNum
 
-        this.styleSetter()
-
+    renderChar(key, char, style) {
         return (
             <Char
                 key = { key }
@@ -38,39 +32,14 @@ class Word extends Component {
         )
     }
 
-    styleSetter(){
-        let characters = this.state.chars;
-        let userInput = this.props.currentInput
-        userInput = userInput.substr(1);
-        //console.log(userInput.slice(0,-1))
-        console.log(characters[userInput.length].char)
-        /*
-        if(userInput.slice(0,-1)===''){
-            return "default"
-        }
-    
-        if(userInput.slice(0,-1) === this.props.word[userInput.length]){
-            return "correctChar"
-        }
-        if(userInput.slice(0,-1) !== this.props.word[userInput.length]){
-            return "incorrectChar"
-        }
-        else{
-            return "default"
-        }
-        */
-    }
-
-
-    
-
-    render(){
+    render() {
         return (
             <li className={(this.props.isCurrentWord) ? "currentWord":"default"}>
                 {this.state.chars.map((x) =>
                     this.renderChar(x.key, x.char, x.style)
-                    )}
+                )}
             </li>
+        
         )
     }
 }
@@ -78,39 +47,29 @@ class Word extends Component {
 export default Word;
 
 /*
-constructor(props) {
-        super(props);
-        const randomWords = require('random-words');
-        let testWords = randomWords({ exactly: 250 }).map((x) => {
-            return ({word:x,
-                isCurrentWord: false})
-             });
-        testWords[0] = {word:testWords[0].word,isCurrentWord:true}
+  charStyle() {
+        //remove leading ' ' from beginning of userInput
+        let userInput = this.props.currentInput.substr(1);
+       // console.log(userInput.length);
+        let wordChars = this.state.chars;
+        if(this.props.isCurrentWord) {
+            if(userInput ===''){
+                wordChars[userInput.length] = {char:wordChars[userInput.length].chars,
+                style:"default",
+                key:wordChars[userInput.length].key}
+              //  this.setState({ chars:wordChars })
+                console.log("empty")
+            }
         
-        this.state = { wordList: testWords }   
+            else if(userInput.slice(-1) === this.props.word[userInput.length-1]){
+                console.log("correctChar") 
+            }
+            else if(userInput.slice(-1) !== this.props.word[userInput.length-1]){
+                console.log("incorrectChar")
+            }
+            else{
+                console.log("default") 
+            }
+        }
     }
-
-
-
-
-
-  charStyle(){
-        let userInput = this.props.currentInput
-        userInput = userInput.substr(1);
-
-        console.log()
-        if(userInput.slice(0,-1)===''){
-            return "default"
-        }
-    
-        if(userInput.slice(0,-1) === this.props.word[userInput.length]){
-            return "correctChar"
-        }
-        if(userInput.slice(0,-1) !== this.props.word[userInput.length]){
-            return "incorrectChar"
-        }
-        else{
-            return "default"
-        }
-        }
     */

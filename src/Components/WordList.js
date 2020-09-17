@@ -3,21 +3,20 @@ import Word from './Word';
 import '../css/wordlist.css';
 
 class WordList extends Component {
-    constructor(props) {
-        super(props);
-        const randomWords = require('random-words');
-        let testWords = randomWords({ exactly: 4 }).map((x) => {
-            return ({word:x,
-                isCurrentWord: false})
-             });
-        testWords[0] = {word:testWords[0].word,isCurrentWord:true}
-        
-        this.state = { wordList: testWords }   
-    }
+ 
 
 // PROPS FROM APP
 // this.props.userInput (string for representing users current input)
 // this.props.currentWord (int for which word user is on)
+
+wordStyle(i){
+   if(i === this.props.currentWordNum){
+       return true;
+   }
+   else {
+       return false;
+   }
+}
 
     renderWord(key, word, isCurrent) {
         return (
@@ -28,6 +27,7 @@ class WordList extends Component {
                 currentInput = { this.props.currentInput }
                 isCurrentWord = { isCurrent }
                 currentWordNum = { this.props.currentWordNum }
+                currentCharNum = { this.props.currentCharNum }
             />
         )
     }
@@ -35,8 +35,8 @@ class WordList extends Component {
     render() {
         return (
         <div className="wordGen">
-            { this.state.wordList.map((x, index) =>
-             this.renderWord(index+1,x.word, x.isCurrentWord)) }
+            { this.props.testWords.map((x, index) =>
+             this.renderWord(index+1,x, this.wordStyle(index))) }
         </div>
         );
       }
