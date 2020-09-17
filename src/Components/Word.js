@@ -22,6 +22,55 @@ class Word extends Component {
 // FROM APP currentInput, currentWordNum
 // FROM WORDLIST listId, word, currentInput, isCurrentWord, currentWordNum, currentCharNum
 
+
+    charStyle(forward,correct,e) {
+        //remove leading ' ' from beginning of userInput
+        let userInput = this.props.currentInput.substr(1);
+        let wordChars = this.state.chars;
+        if(forward && correct){
+            this.charAdder("correctChar",e)
+        } 
+        else if (forward && !correct){
+            this.charAdder("incorrectChar",e)
+        }
+        else {
+            this.charRemover(e);
+        }
+    }
+
+    charAdder(style, e){
+        let wordChars = this.state.chars;
+        //remove first char
+        let currentInput = e.target.value.substr(1)
+        // if current word's chars are less than the userinput
+        // add a new char to the word's chars
+        if(this.state.chars.length <= this.props.currentCharNum) {
+            wordChars.push({
+                char:e.target.value.substr(-1),
+                style:"incorrectChar",
+                key: wordChars[this.props.currentCharNum-2].key + 2
+            })
+            this.setState({chars:wordChars})
+        } else {
+        wordChars[this.props.currentCharNum].style = style;
+        this.setState({chars:wordChars})
+        }
+    }
+
+    charRemover(e) {
+        console.log("THE MASTER DELETE")
+        let wordChars = this.state.chars;
+        let wordLengthDiff = e.target.value.length
+        if(this.props.testWords[this.props.currentWordNum].length < this.props.currentCharNum) {
+            wordChars.splice(-1,1);
+            this.setState({chars:wordChars})
+        }
+        else {
+
+        }
+    }
+
+
     renderChar(key, char, style) {
         return (
             <Char
@@ -45,31 +94,3 @@ class Word extends Component {
 }
 
 export default Word;
-
-/*
-  charStyle() {
-        //remove leading ' ' from beginning of userInput
-        let userInput = this.props.currentInput.substr(1);
-       // console.log(userInput.length);
-        let wordChars = this.state.chars;
-        if(this.props.isCurrentWord) {
-            if(userInput ===''){
-                wordChars[userInput.length] = {char:wordChars[userInput.length].chars,
-                style:"default",
-                key:wordChars[userInput.length].key}
-              //  this.setState({ chars:wordChars })
-                console.log("empty")
-            }
-        
-            else if(userInput.slice(-1) === this.props.word[userInput.length-1]){
-                console.log("correctChar") 
-            }
-            else if(userInput.slice(-1) !== this.props.word[userInput.length-1]){
-                console.log("incorrectChar")
-            }
-            else{
-                console.log("default") 
-            }
-        }
-    }
-    */
