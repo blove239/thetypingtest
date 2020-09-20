@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../css/char.css';
 
-class Char extends Component {
-
-    render() {
+const Char = (props) => {
         return (
-            <span className={this.props.style}>{this.props.char}</span>
+            <span className={props.class}>{props.char}</span>
         )
-    }
 }
 export default Char;

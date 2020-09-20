@@ -1,57 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Word from './Word';
 import '../css/wordlist.css';
 
-class WordList extends Component {
-    constructor(props) {
-        super(props)
-        this.child = React.createRef();
-    }
+const WordList = (props) => {
 // PROPS FROM APP
 // this.props.userInput (string for representing users current input)
 // this.props.currentWord (int for which word user is on)
-
-    wordStyle(i){
-    if(i === this.props.currentWordNum) {
+    const wordStyle = (i) => {
+    if(i === props.currentWordNum) {
         return true;
-    }
+        }
     else {
         return false;
-    }
-    }
-
-    charStyle(forward,correct,e){
-        this.child.current.charStyle(forward,correct,e);
+        }
     }
 
-    renderWord(key, word, isCurrent) {
+    const renderWord = (key, word, isCurrent) => {
         return (
             <Word
                 key = { key }
                 listId = { key }
                 word = { word }
-                currentInput = { this.props.currentInput }
+                currentInput = { props.currentInput }
                 isCurrentWord = { isCurrent }
-                currentWordNum = { this.props.currentWordNum }
-                currentCharNum = { this.props.currentCharNum }
-                testWords = { this.props.testWords }
-                ref = {isCurrent ? this.child: undefined}
-                    
-                
-
-                
+                currentWordNum = { props.currentWordNum }
+                currentCharNum = { props.currentCharNum }
+                testWords = { props.testWords }
             />
         )
     }
 
-    render() {
-        return (
+    return (
         <div className="wordGen">
-            { this.props.testWords.map( (x, index) =>
-             this.renderWord(index + 1, x, this.wordStyle(index)) ) }
+            { props.testWords.map( (x, index) =>
+             renderWord(index + 1, x, wordStyle(index)) ) }
         </div>
         );
-      }
 }
 
 export default WordList;

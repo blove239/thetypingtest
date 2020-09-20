@@ -1,117 +1,93 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Test from './Components/Test';
 import WordList from './Components/WordList';
 
 
-class App extends Component {
-  constructor(props) {
-    super();
-    const randomWords = require('random-words');
-    let testWords = randomWords({ exactly: 8 });
-    this.state = {
-      currentInput   : " ",
-      currentWordNum : 0,
-      currentCharNum : 0,
-      userInputWords : [],
-      testWords: testWords,
-    }
-    this.onInputChange = this.onInputChange.bind(this);
-  
-    this.child = React.createRef();
-  }
+const App = () => {
+ 
+    const randomWords                         = require('random-words');
+    const testWords                           = randomWords({ exactly: 1 });
+    const [currentInput, setCurrentInput]     = useState(" ");
+    const [currentWordNum, setCurrentWordNum] = useState(0);
+    const [currentCharNum, setCurrentCharNum] = useState(0);
+    const [userInputWords, setUserInputWords] = useState([]);
 
-  onDeletion(e){
-    if(this.state.currentInput.length === 1) { //if user at start of a word
-      if(this.state.userInputWords.length === 0) { //block user from deleting if at first word 
-          this.setState({ currentInput: ' ' })
+  const onDeletion = (e) => {
+    if(currentInput.length === 1) { //if user at start of a word
+      if(userInputWords.length === 0) { //block user from deleting if at first word 
+          setCurrentInput(" ");
         }
-      else { // if user deleting at first character of a non first word
-        this.setState({           // return the previous word in inputWords, among other things
-          userInputWords : this.state.userInputWords.slice(0, -1), //removes last item from list
-          currentInput   : this.state.userInputWords.slice(-1)[0], // sets current input to previous typed word
-          currentWordNum : this.state.currentWordNum - 1,
-          currentCharNum : 0
-          });
-        this.child.current.charStyle(false,false,e);
-
+      else { 
+        // if user deleting at first character of a non first word
+        // return the previous word in inputWords, among other things
+          setUserInputWords(userInputWords.slice(0, -1));//removes last item from list
+          setCurrentInput(userInputWords.slice(-1)[0]); // sets  current input to previous typed word
+          setCurrentWordNum(currentWordNum - 1);
+          setCurrentCharNum(0); 
         }
     } 
     else {// if deletion of a character of current word
-      this.setState({
-        currentInput   : e.target.value,
-        currentCharNum : this.state.currentCharNum - 1
-       });
-       this.child.current.charStyle(false,false,e);
-
+      setCurrentInput(e.target.value);
+      setCurrentCharNum(currentCharNum - 1);
       }
-}
-
-  onSpacebar(){
-    this.setState(prevState => ({
-      userInputWords  : [...prevState.userInputWords, this.state.currentInput],
-      currentWordNum  : this.state.currentWordNum + 1,
-      currentInput    : ' ',
-      currentCharNum  : 0
-    })
-  )
   }
 
-  charCheck(e){
-    this.setState({
-      currentInput   : e.target.value,
-      currentCharNum : this.state.currentCharNum + 1
-    });
-    if(this.currentTestChar(e) === this.currentUserChar(e)) {
-      this.child.current.charStyle(true,true,e);
-      console.log("correct");
+  const onSpacebar = () => {
+    setUserInputWords([...userInputWords, currentInput]);
+    setCurrentWordNum(currentWordNum + 1);
+    setCurrentInput(" ");
+    setCurrentCharNum(0);
+  }
+
+  const charCheck = (e) => {
+    setCurrentInput(e.target.value);
+    setCurrentCharNum(currentCharNum + 1);
+   
+    if(currentTestChar(e) === currentUserChar(e)) {
+
     } else {
-      this.child.current.charStyle(true,false,e);
-      console.log("incorrect");
+
     }
-    
   }
   
-  currentTestChar(e) {
-    let cCN = this.state.currentCharNum
-    return this.state.testWords[this.state.currentWordNum].charAt(cCN);
+  const currentTestChar = (e) => {
+    return testWords[currentWordNum].charAt(currentCharNum);
   }
 
-  currentUserChar(e) {
+  const currentUserChar = (e) => {
     return e.target.value.substr(1).slice(-1);
   }
 
-  onInputChange(e){
-    if(e.target.value.length < this.state.currentInput.length) { // checks for deletion
-      this.onDeletion(e);
+  const onInputChange = (e) => {
+        if(e.target.value.length < currentInput.length) { // checks for deletion
+          onDeletion(e);
+        }
+        else if(e.target.value.charAt(e.target.value.length-1) === ' ') { //spacebar detection
+          onSpacebar();
+        }
+        else { //if user typing a character
+          charCheck(e);
+        }
     }
-    else if(e.target.value.charAt(e.target.value.length-1) === ' ') { //spacebar detection
-      this.onSpacebar();
-     }
-    else { //if user typing a character
-      this.charCheck(e);
-    }
-  }
 
 
-  render() {
+
     return (
-      <div style={{ width: 500, margin: 50 }}>
+      <div style = {{ width: 500, margin: 50 }}>
         <WordList 
-          currentWordNum = { this.state.currentWordNum }
-          currentCharNum = { this.state.currentCharNum }
-          currentInput = { this.state.currentInput }
-          testWords = { this.state.testWords }
-          ref = { this.child }
+          currentWordNum = { currentWordNum }
+          currentCharNum = { currentCharNum }
+          currentInput   = { currentInput }
+          testWords      = { testWords }
         />
 
         <Test 
-          inputVal = { this.state.currentInput }
-          onChange = { this.onInputChange }
+          inputVal = { currentInput }
+          onChange = { onInputChange }
         />
       </div>
     );
-  }
 }
 
 export default App 
