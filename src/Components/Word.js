@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Char from './Char';
 import '../css/word.css';
 
@@ -7,32 +7,32 @@ const Word = (props) => {
     let charList = [];
     for(let i = 0; i < props.word.length; i++) {
         charList.push({ 
-            char:props.word[i],
-            style:"default",
-            key: characterIndex });
+            char : props.word[i],
+            style: "default",
+            key  : characterIndex });
         characterIndex += 1;
     }
     const [chars, setChars] = useState(charList);
 
-
-//PROPS
-// FROM APP currentInput, currentWordNum
-// FROM WORDLIST listId, word, currentInput, isCurrentWord, currentWordNum, currentCharNum
-
-    const renderChar = (key, char,index) => {
-        let style = "default";
-        let trimmedInput = props.currentInput.substr(1);
-        if(props.isCurrentWord){
-            if(props.currentCharNum === index){
-            for(let i = 0;i<trimmedInput.length;i++){
-                (chars[i].char === trimmedInput[i]) ? (style = "correctChar") : (style = "incorrectChar")
+    useEffect(() => {
+        let userChars        = chars;        
+        if(props.isCurrentWord && props.currentInput.length-1<=chars.length){
+            for(let i=0; i<chars.length; i++){
+                if(props.currentInput.substr(1)[i] === undefined){
+                    userChars[i].style        = "default"
+                    }
+                else if(userChars[i].char === props.currentInput.substr(1)[i]){
+                    userChars[i].style        = "correctChar"
+                } else {
+                    userChars[i].style = "incorrectChar"
+                    }
                 }
             }
-            }
-            
-        
-            
-        return (
+            setChars(userChars);
+    },[chars, props.currentInput, props.isCurrentWord])
+
+    const renderChar = (key, char, style) => {
+           return (
             <Char
                 key   = { key }
                 class = { style }
@@ -43,8 +43,8 @@ const Word = (props) => {
 
         return (
             <li className={(props.isCurrentWord) ? "currentWord":"default"}>
-                {chars.map((x,index) => 
-                    renderChar(x.key, x.char,index)
+                {chars.map((x, index) => 
+                    renderChar(x.key, x.char,x.style)
                 )}
             </li>
         

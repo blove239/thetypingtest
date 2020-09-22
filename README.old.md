@@ -1,3 +1,0 @@
-thetypingtest
-
-FIRST CHANGES!
