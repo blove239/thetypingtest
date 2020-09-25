@@ -1,9 +1,9 @@
 import React from 'react';
 import '../css/char.css';
 
-const Char = (props) => {
-        return (
-            <span className={props.class}>{props.char}</span>
-        )
+const Char = ({ style, char }) => {
+    return (
+        <span className={style}>{char}</span>
+    )
 }
 export default Char;

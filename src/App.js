@@ -3,29 +3,26 @@ import './App.css';
 import Test from './Components/Test';
 import WordList from './Components/WordList';
 
-
 const App = () => {
   const randomWords = require('random-words');
-  const testWords = randomWords({ exactly: 30 });
-  const [currentInput, setCurrentInput] = useState(" ");
+  const [testWords] = useState(randomWords({ exactly: 25 }))
+  const [currentInput, setCurrentInput] = useState(' ');
   const [currentWordNum, setCurrentWordNum] = useState(0);
   const [currentCharNum, setCurrentCharNum] = useState(0);
   const [userInputWords, setUserInputWords] = useState([]);
 
   const onDeletion = (e) => {
-    if (currentInput.length === 1) { // if user at start of a word
-      if (userInputWords.length === 0) { // block user from deleting if at first word 
+    if (currentInput.length === 1) { 
+      if (userInputWords.length === 0) {
         setCurrentInput(' ');
       }
       else {
-        // if user deleting at first character of a non first word
-        // return the previous word in inputWords, among other things
-        setUserInputWords(userInputWords.slice(0, -1));//removes last item from list
-        setCurrentInput(userInputWords.slice(-1)[0]); // sets  current input to previous typed word
+        setUserInputWords(userInputWords.slice(0, -1));
+        setCurrentInput(userInputWords.slice(-1)[0]);
         setCurrentWordNum(currentWordNum - 1);
-        setCurrentCharNum(0);
+        setCurrentCharNum(e.target.value.length - 1);
       }
-    } else {// if deletion of a character of current word
+    } else {
       setCurrentInput(e.target.value);
       setCurrentCharNum(currentCharNum - 1);
     }
@@ -34,7 +31,7 @@ const App = () => {
   const onSpacebar = () => {
     setUserInputWords([...userInputWords, currentInput]);
     setCurrentWordNum(currentWordNum + 1);
-    setCurrentInput(" ");
+    setCurrentInput(' ');
     setCurrentCharNum(0);
   }
 
@@ -58,13 +55,13 @@ const App = () => {
   }
 
   const onInputChange = (e) => {
-    if (e.target.value.length < currentInput.length) { // checks for deletion
+    if (e.target.value.length < currentInput.length) { 
       onDeletion(e);
     }
-    else if (e.target.value.charAt(e.target.value.length - 1) === ' ') { //spacebar detection
+    else if (e.target.value.charAt(e.target.value.length - 1) === ' ') {
       onSpacebar();
     }
-    else { //if user typing a character
+    else {
       charCheck(e);
     }
   }
@@ -83,9 +80,8 @@ const App = () => {
       <Test
         inputVal={currentInput}
         onChange={onInputChange}
-      />
+      />  
     </div>
-  );
-}
+  )}
 
 export default App 
