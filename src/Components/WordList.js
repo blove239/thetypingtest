@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Word from './Word';
 import '../css/wordlist.css';
 
 const WordList = ({ currentInput, currentCharNum, currentWordNum }) => {
     const randomWords = require('random-words');
-    const [testWords, setTestWords] = useState(randomWords({ exactly: 150 }));
+    const [testWords] = useState(randomWords({ exactly: 150 }));
 
- 
     const renderWord = (key, word, isCurrent) => {
         return (
             <Word
@@ -20,7 +19,7 @@ const WordList = ({ currentInput, currentCharNum, currentWordNum }) => {
     }
 
     return (
-        <div className="wordGen">
+        <div className="wordList">
             { testWords.map((x, index) =>
                 renderWord(index, x, (index === currentWordNum) ? true : false))}
         </div>

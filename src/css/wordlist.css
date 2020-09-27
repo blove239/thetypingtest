@@ -1,4 +1,4 @@
-.wordGen {
+.wordList {
     border: 1px solid red;
     height: 25vh;
     width: 800px;
@@ -9,7 +9,6 @@
     font-size: 26pt;
 }
 
-
 ul {
     list-style-type: none;
     padding: 0;
@@ -17,7 +16,6 @@ ul {
     text-align: right;
     width: 10em;
 }
-
 
 li {
     margin: 0 7px;

@@ -14,29 +14,40 @@ const Word = ({ word, isCurrentWord, currentInput, currentWordNum }) => {
     characterIndex += 1;
   }
   const [chars, setChars] = useState(charList);
-  //  const fieldRef = useRef<HTMLInputElement>(null);
-  const ref = createRef();
+  const scrollRef = createRef();
+
+  const setChar = (str, i) => {
+    return {
+      char: chars[i].char,
+      style: str,
+      key: chars[i].key
+    }
+  }
+
+  const updateCharStyles = () => {
+    if (currentInput.length - 1 <= word.length) {
+      let newChars = [];
+      for (let i = 0; i < chars.length; i++) {
+        const currentChar = currentInput.substr(1)[i];
+        if (currentChar === undefined) {
+          newChars[i] = setChar('default', i)
+        } else if (chars[i].char === currentChar) {
+          newChars[i] = setChar('correctChar', i)
+        } else {
+          newChars[i] = setChar('incorrectChar', i)
+        }
+      }
+      setChars(newChars);
+    }
+  }
 
   useEffect(() => {
     if (isCurrentWord) {
-      ref.current.scrollIntoView({
+      scrollRef.current.scrollIntoView({
         behavior: 'smooth',
-        block: 'start',
+        block: 'center',
       });
-      const userChars = JSON.parse(JSON.stringify(chars));
-      if (currentInput.length - 1 <= word.length) {
-        for (let i = 0; i < chars.length; i++) {
-          const currentChar = currentInput.substr(1)[i];
-          if (currentChar === undefined) {
-            userChars[i].style = 'default';
-          } else if (userChars[i].char === currentChar) {
-            userChars[i].style = 'correctChar';
-          } else {
-            userChars[i].style = 'incorrectChar';
-          }
-        }
-      }
-      setChars(userChars);
+      updateCharStyles();
     }
   }, [currentInput, currentWordNum])
 
@@ -51,7 +62,7 @@ const Word = ({ word, isCurrentWord, currentInput, currentWordNum }) => {
   };
 
   return (
-    <li ref={ref} className={(isCurrentWord) ? 'currentWord' : 'default'}>
+    <li ref={scrollRef} className={(isCurrentWord) ? 'currentWord' : 'default'}>
       {chars.map(x => renderChar(x.key, x.char, x.style),
       )}
     </li>
