@@ -1,55 +1,50 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, createRef, useRef } from 'react';
 import Char from './Char';
 import '../css/word.css';
 
-const Word = ({ word, isCurrentWord, currentInput, currentWordNum }) => {
-  let characterIndex = 0;
-  const charList = [];
-  for (let i = 0; i < word.length; i++) {
-    charList.push({
-      char: word[i],
+const Word = ({ word, isCurrentWord, currentInput, currentWordNum, resetTestWords }) => {
+  const charList = word.split('').map((char, i) => {
+    return {
+      char: char,
       style: 'default',
-      key: characterIndex
-    });
-    characterIndex += 1;
-  }
+      key: i
+    };
+  });
+
   const [chars, setChars] = useState(charList);
   const scrollRef = createRef();
 
-  const setChar = (str, i) => {
-    return {
-      char: chars[i].char,
-      style: str,
-      key: chars[i].key
-    }
-  }
-
   const updateCharStyles = () => {
     if (currentInput.length - 1 <= word.length) {
-      let newChars = [];
-      for (let i = 0; i < chars.length; i++) {
-        const currentChar = currentInput.substr(1)[i];
-        if (currentChar === undefined) {
-          newChars[i] = setChar('default', i)
-        } else if (chars[i].char === currentChar) {
-          newChars[i] = setChar('correctChar', i)
-        } else {
-          newChars[i] = setChar('incorrectChar', i)
+      const newChars = chars.map((charInstance, i) => {
+        const inputChar = currentInput.substr(1)[i];
+        const newChar = {
+          ...charInstance,
+          style: 'default'
+        };
+        if (charInstance.char === inputChar) {
+          newChar.style = 'correctChar'
+        } else if (inputChar && inputChar !== charInstance.char) {
+          newChar.style = 'incorrectChar'
         }
-      }
+        return newChar;
+      })
       setChars(newChars);
     }
   }
 
   useEffect(() => {
-    if (isCurrentWord) {
+    if (resetTestWords) {
+      setChars(charList);
+    }
+    else if (isCurrentWord) {
       scrollRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
       updateCharStyles();
     }
-  }, [currentInput, currentWordNum])
+  }, [currentInput, currentWordNum, resetTestWords])
 
   const renderChar = (key, char, style) => {
     return (
@@ -63,8 +58,7 @@ const Word = ({ word, isCurrentWord, currentInput, currentWordNum }) => {
 
   return (
     <li ref={scrollRef} className={(isCurrentWord) ? 'currentWord' : 'default'}>
-      {chars.map(x => renderChar(x.key, x.char, x.style),
-      )}
+      {chars.map(x => renderChar(x.key, x.char, x.style))}
     </li>
 
   );

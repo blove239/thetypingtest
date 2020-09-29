@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Word from './Word';
 import '../css/wordlist.css';
 
-const WordList = ({ currentInput, currentCharNum, currentWordNum }) => {
-    const randomWords = require('random-words');
-    const [testWords] = useState(randomWords({ exactly: 150 }));
-
+const WordList = ({ currentInput, currentCharNum, currentWordNum, testWords, resetTestWords }) => {
     const renderWord = (key, word, isCurrent) => {
         return (
             <Word
@@ -14,6 +11,7 @@ const WordList = ({ currentInput, currentCharNum, currentWordNum }) => {
                 currentInput={currentInput}
                 isCurrentWord={isCurrent}
                 currentWordNum={currentWordNum}
+                resetTestWords={resetTestWords}
             />
         )
     }
