@@ -6,29 +6,29 @@ const Progress = ({ width, elapsedTime }) => {
 
   useEffect(() => {
     setValue((elapsedTime / 60) * width);
-  });
+  }, [elapsedTime, width]);
 
   return (
     <div>
       <div className="progress-div" style={{ width: width }}>
+        Time Remaining: {60 - elapsedTime}s
         <div style={{ width: `${value}px` }} className="progress" />
       </div>
     </div>
   );
 };
 
-const TimerBar = ({ isTestActive, isTestDone, testComplete, resetTest }) => {
+const TimerBar = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
     let interval = null;
-    if (isTestActive && !isTestDone) {
+    if (isTestActive) {
       interval = setInterval(() => {
-        setSeconds(percent => percent + 1);
-        console.log(seconds)
+        setSeconds(seconds => seconds + 1);
       }, 1000);
     }
-    if (seconds === 8) {
+    if (seconds === 60) {
       testComplete();
       setSeconds(0);
     }

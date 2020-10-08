@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Stats from './Components/Stats'
-import Test from './Components/Test';
 import TimerBar from './Components/TimerBar';
 import WordList from './Components/WordList';
 import randomWords from 'random-words';
@@ -8,14 +7,14 @@ import randomWords from 'random-words';
 import './App.css';
 
 const App = () => {
-  const [currentInput, setCurrentInput] = useState(' ');
+  const typingArea = useRef(null);
   const [currentWordNum, setCurrentWordNum] = useState(0);
   const [currentCharNum, setCurrentCharNum] = useState(0);
-  const [userInputWords, setUserInputWords] = useState([]);
-  const [testWords, setTestWords] = useState(randomWords({ exactly: 200 }));
+  const [userInputWords, setUserInputWords] = useState(['']);
+  const [testWords, setTestWords] = useState(randomWords({ exactly: 250 }));
   const [isTestActive, setIsTestActive] = useState(false);
   const [isTestDone, setIsTestDone] = useState(false);
-  const [resetTestWords, setResetTestWords] = useState(false);
+  const [resetTestState, setResetTestWords] = useState(false);
 
   const testComplete = () => {
     setIsTestActive(false);
@@ -23,59 +22,67 @@ const App = () => {
   }
 
   const resetTest = () => {
-    setCurrentInput(' ');
     setCurrentWordNum(0);
     setCurrentCharNum(0);
-    setUserInputWords([]);
-    setTestWords(randomWords({ exactly: 200 }));
+    setUserInputWords(['']);
+    setTestWords(randomWords({ exactly: 250 }));
     setIsTestActive(false);
     setIsTestDone(false);
     setResetTestWords(true);
   }
 
   const onDeletion = (e) => {
-    if (currentInput.length === 1) {
-      if (userInputWords.length === 0) {
-        setCurrentInput(' ');
-      } else {
-        setUserInputWords(userInputWords.slice(0, -1));
-        setCurrentInput(userInputWords.slice(-1)[0]);
-        setCurrentWordNum(currentWordNum - 1);
-        setCurrentCharNum(e.target.value.length - 1);
-      }
-    } else {
-      setCurrentInput((e.target.value === '') ? ' ' : e.target.value);
-      setCurrentCharNum(e.target.value.length - 1);
+    if (userInputWords.length > 1 && userInputWords[currentWordNum].length === 0) {
+      setUserInputWords(userInputWords.slice(0, -1));
+      setCurrentWordNum(currentWordNum - 1);
+      setCurrentCharNum(userInputWords.slice(0, -1).length);
+    }
+    else if (userInputWords[currentWordNum].length > 0) {
+      setCurrentCharNum(currentCharNum - 1);
+      let userInputs = [...userInputWords];
+      userInputs[currentWordNum] = userInputs[currentWordNum].slice(0, -1);
+      setUserInputWords(userInputs);
     }
   }
 
   const onSpacebar = (e) => {
-    setUserInputWords([...userInputWords, currentInput]);
-    setCurrentWordNum(currentWordNum + 1);
-    setCurrentInput(' ');
-    setCurrentCharNum(0);
+    if (testWords[currentWordNum].length === userInputWords[currentWordNum].length) {
+      setUserInputWords([...userInputWords, '']);
+      setCurrentWordNum(currentWordNum + 1);
+      setCurrentCharNum(0);
+    }
   }
 
   const onUserInput = (e) => {
-    setCurrentInput(e.target.value);
-    setCurrentCharNum(e.target.value.length - 1);
+    setCurrentCharNum(currentCharNum + 1);
+    let userInputs = [...userInputWords];
+    userInputs[currentWordNum] = userInputs[currentWordNum].concat(e.key);
+    setUserInputWords(userInputs);
   }
 
-  const onInputChange = (e) => {
-    if (!isTestActive && !isTestDone) {
+  const handleOnKeyPress = (e) => {
+    if (!isTestActive) {
       setIsTestActive(true);
       setResetTestWords(false);
-    } if (e.target.value.length < currentInput.length) {
-      onDeletion(e);
-    } else if (e.target.value.charAt(e.target.value.length - 1) === ' ') {
+    } if (e.key === ' ') {
       onSpacebar(e);
     } else {
       onUserInput(e);
     }
   }
 
+  const handleOnKeyDown = (e) => {
+    if (e.key === "Backspace") {
+      onDeletion(e);
+    }
+  }
+
+  const handleClick = () => {
+    typingArea.current.focus();
+  }
+
   return (
-    <div style={{ width: 500, margin: 50 }}>
+    <div onClick={handleClick} style={{ width: '100vw', height: '100vh', margin: 5 }}>
       <TimerBar
         isTestActive={isTestActive}
         isTestDone={isTestDone}
@@ -84,19 +91,27 @@ const App = () => {
       />
       <Stats
         testWords={testWords}
-        currentInput={currentInput}
+        userInputWords={userInputWords}
+        currentWordNum={currentWordNum}
+        currentCharNum={currentCharNum}
+        isTestActive={isTestActive}
+        resetTestState={resetTestState}
       />
       <WordList
         currentWordNum={currentWordNum}
         currentCharNum={currentCharNum}
-        currentInput={currentInput}
         testWords={testWords}
-        resetTestWords={resetTestWords}
+        resetTestWords={resetTestState}
+        userInputWords={userInputWords}
       />
-      <Test
-        inputVal={currentInput}
-        onChange={onInputChange}
-        isTestDone={isTestDone}
+      <input
+        ref={typingArea}
+        className='input'
+        onKeyPress={handleOnKeyPress}
+        onKeyDown={handleOnKeyDown}
+        type="text"
+        disabled={isTestDone}
+        autoFocus
       />
     </div>
   )

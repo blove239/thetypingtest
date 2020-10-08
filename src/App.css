@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.input {
+  color: #000000;
+  width: 0;
+  height: 0;
+  opacity: 0 
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, createRef, useRef } from 'react';
 import Char from './Char';
 import '../css/word.css';
 
-const Word = ({ word, isCurrentWord, currentInput, currentWordNum, resetTestWords }) => {
+const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestState }) => {
   const charList = word.split('').map((char, i) => {
     return {
       char: char,
@@ -14,10 +14,17 @@ const Word = ({ word, isCurrentWord, currentInput, currentWordNum, resetTestWord
   const [chars, setChars] = useState(charList);
   const scrollRef = createRef();
 
+  const prevUserInputWordsRef = useRef();
+  useEffect(() => {
+      prevUserInputWordsRef.current = userInputWords[currentWordNum];
+  }, [userInputWords])
+
+  const prevUserInputWords = prevUserInputWordsRef.current;
+
   const updateCharStyles = () => {
-    if (currentInput.length - 1 <= word.length) {
+    if (userInputWords[currentWordNum].length <= word.length) {
       const newChars = chars.map((charInstance, i) => {
-        const inputChar = currentInput.substr(1)[i];
+        const inputChar = userInputWords[currentWordNum][i];
         const newChar = {
           ...charInstance,
           style: 'default'
@@ -30,21 +37,30 @@ const Word = ({ word, isCurrentWord, currentInput, currentWordNum, resetTestWord
         return newChar;
       })
       setChars(newChars);
+    } if (userInputWords[currentWordNum].length >= word.length && (prevUserInputWords.length > userInputWords[currentWordNum].length)){
+      setChars(chars => chars.slice(0,-1))
+    }
+    else if (userInputWords[currentWordNum].length > word.length) {
+      setChars(chars => chars.concat({
+        char: userInputWords[currentWordNum].slice(-1),
+        style: 'incorrectChar',
+        key: chars.length
+      }))
     }
   }
 
   useEffect(() => {
-    if (resetTestWords) {
+    if (resetTestState) {
       setChars(charList);
     }
-    else if (isCurrentWord) {
+    if (isCurrentWord) {
       scrollRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
       updateCharStyles();
     }
-  }, [currentInput, currentWordNum, resetTestWords])
+  }, [userInputWords, currentWordNum, resetTestState])
 
   const renderChar = (key, char, style) => {
     return (
