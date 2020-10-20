@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createRef, useRef } from 'react';
+import React, { useState, useEffect, createRef, useRef, memo } from 'react';
 import Char from './Char';
 import '../css/word.css';
 
-const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestState }) => {
+const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestState, isTestActive }) => {
   const charList = word.split('').map((char, i) => {
     return {
       char: char,
@@ -10,19 +10,21 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
       key: i
     };
   });
-
   const [chars, setChars] = useState(charList);
   const scrollRef = createRef();
 
   const prevUserInputWordsRef = useRef();
+  const prevCurrentWordNumRef = useRef();
   useEffect(() => {
-      prevUserInputWordsRef.current = userInputWords[currentWordNum];
-  }, [userInputWords])
+    prevUserInputWordsRef.current = userInputWords[currentWordNum];
+    prevCurrentWordNumRef.current = currentWordNum;
+  }, [userInputWords, currentWordNum])
 
   const prevUserInputWords = prevUserInputWordsRef.current;
+  const prevCurrentWordNum = prevCurrentWordNumRef.current;
 
   const updateCharStyles = () => {
-    if (userInputWords[currentWordNum].length <= word.length) {
+    if (userInputWords[currentWordNum].length <= word.length && isTestActive) {
       const newChars = chars.map((charInstance, i) => {
         const inputChar = userInputWords[currentWordNum][i];
         const newChar = {
@@ -37,10 +39,10 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
         return newChar;
       })
       setChars(newChars);
-    } if (userInputWords[currentWordNum].length >= word.length && (prevUserInputWords.length > userInputWords[currentWordNum].length)){
-      setChars(chars => chars.slice(0,-1))
-    }
-    else if (userInputWords[currentWordNum].length > word.length) {
+    } if (userInputWords[currentWordNum].length >= word.length &&
+      (prevUserInputWords.length > userInputWords[currentWordNum].length)) {
+      setChars(chars => chars.slice(0, -1))
+    } else if (userInputWords[currentWordNum].length > word.length) {
       setChars(chars => chars.concat({
         char: userInputWords[currentWordNum].slice(-1),
         style: 'incorrectChar',
@@ -58,6 +60,8 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
         behavior: 'smooth',
         block: 'center',
       });
+    }
+    if (isCurrentWord && prevCurrentWordNum === currentWordNum) {
       updateCharStyles();
     }
   }, [userInputWords, currentWordNum, resetTestState])
@@ -71,13 +75,28 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
       />
     );
   };
-
   return (
-    <li ref={scrollRef} className={(isCurrentWord) ? 'currentWord' : 'default'}>
+    <li ref={scrollRef} className={(isCurrentWord) ? 'current-word' : 'default'}>
       {chars.map(x => renderChar(x.key, x.char, x.style))}
     </li>
-
   );
 };
 
-export default Word;
+const areEqual = (prevProps, nextProps) => {
+  if (nextProps.resetTestState) {
+    return false;
+  }
+  else if (nextProps.currentWordNum + 1 === nextProps.index) {
+    return false;
+  }
+  else if (nextProps.currentWordNum === nextProps.index) {
+    return false;
+  }
+  else if (nextProps.currentWordNum - 1 === nextProps.index) {
+    return false
+  } else {
+    return true;
+  }
+}
+
+export default memo(Word, areEqual);

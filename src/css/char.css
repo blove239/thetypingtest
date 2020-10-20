@@ -1,12 +1,15 @@
 .correctChar {
-    color: #0400ff
+    color: #6863ce;
+    font-family: 'Raleway', sans-serif;
 }
 
 .incorrectChar {
-    color: #ff0000;
+    color: #ff554C;
     text-decoration: line-through;
+    font-family: 'Raleway', sans-serif;
 }
 
 .default {
-    color: #000000;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
 }

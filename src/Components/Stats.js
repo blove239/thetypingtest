@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { SIXTY_SECONDS } from '../utils/constants'
 import '../css/stats.css';
 
 const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, resetTestState }) => {
-    const [charPerMin, setCharPerMin] = useState(0);
     const [wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
@@ -20,31 +20,24 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     useEffect(() => {
         if (resetTestState) {
-            setCharPerMin(0);
             setWordPerMin(0);
             setSeconds(0);
+            setTotalTypedChars(0);
+            setTotalCorrectChars(0);
         }
         calcWPM();
-        calcCPM();
     }, [userInputWords, seconds, resetTestState])
-    const prevUserInputWordsRef = useRef();
 
+    const prevUserInputWordsRef = useRef();
     useEffect(() => {
         prevUserInputWordsRef.current = userInputWords[currentWordNum];
         calcAccuracy();
     }, [userInputWords])
-
     const prevUserInputWords = prevUserInputWordsRef.current;
 
     const calcWPM = () => {
-        const wpm = Math.round((currentWordNum / seconds) * 60);
+        const wpm = Math.round((currentWordNum / seconds) * SIXTY_SECONDS);
         setWordPerMin((Number.isNaN(wpm)) ? 0 : wpm)
-    }
-
-    const calcCPM = () => {
-        const cpm = Math.round((currentCharNum / seconds) * 60);
-        setCharPerMin((currentCharNum < testWords[0].length)
-            ? 0 : (Number.isNaN(cpm)) ? 0 : cpm)
     }
 
     const isCharCorrect = () => {
@@ -57,21 +50,27 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
     }
 
     const calcAccuracy = () => {
-        // deletions don't affect stats
         if (prevUserInputWords !== undefined && !(prevUserInputWords.length > userInputWords[currentWordNum].length)) {
             isCharCorrect();
-        }
-        if (userInputWords[currentWordNum] === '') {
-
         }
     }
 
     return (
-        <main className='statHolder'>
-            <div className='statBoxes'>WPM: {wordPerMin}</div>
-            <div className='statBoxes'>CPM: {charPerMin}</div>
-            <div className='statBoxes'>ACC: {totalTypedChars === 0 ? 0 : Math.round((totalCorrectChars / totalTypedChars) * 100)}%</div>
-        </main>
+        <div>
+            <div className='statHolder'>
+                <div className='statBoxes'>
+                    <div className='stat-heading'>Words Per Minute</div>
+                    {wordPerMin}
+                </div>
+            </div>
+            <div className='statHolder'>
+                <div className='statBoxes'>
+                    <div className='stat-heading'>Accuracy</div>
+                    {totalTypedChars === 0 ? 0 : Math.round((totalCorrectChars / totalTypedChars) * 100)}%
+                </div>
+            </div>
+        </div>
+
     );
 }
 

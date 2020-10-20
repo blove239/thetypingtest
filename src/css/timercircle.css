@@ -1,0 +1,34 @@
+.timer-wrapper {
+    background-color: #3a3a3a;
+    padding: 5px;
+    box-shadow: 0 0 .3em .3em #1e1e1e;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+.timer {
+    font-family: 'Raleway', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.text {
+    color: #ffffff;
+  }
+  
+.value {
+    font-size: 50px;
+  }
+  
+.reset-button{
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+    color: #ffffff;
+    background-color: #1e1e1e;
+    font-size: 14pt;
+  }
+
+  

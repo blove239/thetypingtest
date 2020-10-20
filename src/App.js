@@ -1,20 +1,23 @@
 import React, { useState, useRef } from 'react';
-import Stats from './Components/Stats'
-import TimerBar from './Components/TimerBar';
+import Title from './Components/Title';
+import Stats from './Components/Stats';
+import TimerCircle from './Components/TimerCircle';
 import WordList from './Components/WordList';
 import randomWords from 'random-words';
+import Footer from './Components/Footer';
+import { TEST_WORDS } from './utils/constants'
 
 import './App.css';
 
 const App = () => {
-  const typingArea = useRef(null);
   const [currentWordNum, setCurrentWordNum] = useState(0);
   const [currentCharNum, setCurrentCharNum] = useState(0);
   const [userInputWords, setUserInputWords] = useState(['']);
-  const [testWords, setTestWords] = useState(randomWords({ exactly: 250 }));
+  const [testWords, setTestWords] = useState(randomWords({ exactly: TEST_WORDS }));
   const [isTestActive, setIsTestActive] = useState(false);
   const [isTestDone, setIsTestDone] = useState(false);
   const [resetTestState, setResetTestWords] = useState(false);
+  const typingArea = useRef(null);
 
   const testComplete = () => {
     setIsTestActive(false);
@@ -25,7 +28,7 @@ const App = () => {
     setCurrentWordNum(0);
     setCurrentCharNum(0);
     setUserInputWords(['']);
-    setTestWords(randomWords({ exactly: 250 }));
+    setTestWords(randomWords({ exactly: TEST_WORDS }));
     setIsTestActive(false);
     setIsTestDone(false);
     setResetTestWords(true);
@@ -46,7 +49,7 @@ const App = () => {
   }
 
   const onSpacebar = (e) => {
-    if (testWords[currentWordNum].length === userInputWords[currentWordNum].length) {
+    if (testWords[currentWordNum].length <= userInputWords[currentWordNum].length) {
       setUserInputWords([...userInputWords, '']);
       setCurrentWordNum(currentWordNum + 1);
       setCurrentCharNum(0);
@@ -64,7 +67,8 @@ const App = () => {
     if (!isTestActive) {
       setIsTestActive(true);
       setResetTestWords(false);
-    } if (e.key === ' ') {
+    }
+    if (e.key === ' ') {
       onSpacebar(e);
     } else {
       onUserInput(e);
@@ -82,37 +86,48 @@ const App = () => {
   }
 
   return (
-    <div onClick={handleClick} style={{ width: '100vw', height: '100vh', margin: 5 }}>
-      <TimerBar
-        isTestActive={isTestActive}
-        isTestDone={isTestDone}
-        testComplete={testComplete}
-        resetTest={resetTest}
-      />
-      <Stats
-        testWords={testWords}
-        userInputWords={userInputWords}
-        currentWordNum={currentWordNum}
-        currentCharNum={currentCharNum}
-        isTestActive={isTestActive}
-        resetTestState={resetTestState}
-      />
-      <WordList
-        currentWordNum={currentWordNum}
-        currentCharNum={currentCharNum}
-        testWords={testWords}
-        resetTestWords={resetTestState}
-        userInputWords={userInputWords}
-      />
+    <div onClick={handleClick} className='app'>
       <input
-        ref={typingArea}
         className='input'
+        ref={typingArea}
         onKeyPress={handleOnKeyPress}
         onKeyDown={handleOnKeyDown}
-        type="text"
+        type='text'
         disabled={isTestDone}
         autoFocus
       />
+      <div className='app-container'>
+        <Title />
+        <WordList
+          currentWordNum={currentWordNum}
+          currentCharNum={currentCharNum}
+          testWords={testWords}
+          resetTestWords={resetTestState}
+          userInputWords={userInputWords}
+          isTestActive={isTestActive}
+        />
+        <div className='row'>
+          <div className='column'>
+            <TimerCircle
+              isTestActive={isTestActive}
+              isTestDone={isTestDone}
+              testComplete={testComplete}
+              resetTest={resetTest}
+            />
+          </div>
+          <div className='column'>
+            <Stats
+              testWords={testWords}
+              userInputWords={userInputWords}
+              currentWordNum={currentWordNum}
+              currentCharNum={currentCharNum}
+              isTestActive={isTestActive}
+              resetTestState={resetTestState}
+            />
+          </div>
+        </div>
+        <Footer />
+      </div>
     </div>
   )
 }
