@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SIXTY_SECONDS } from '../utils/constants'
+import { AVERAGE_WORD, SIXTY_SECONDS } from '../utils/constants'
 import '../css/stats.css';
 
 const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, resetTestState }) => {
@@ -36,8 +36,8 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
     const prevUserInputWords = prevUserInputWordsRef.current;
 
     const calcWPM = () => {
-        const wpm = Math.round((currentWordNum / seconds) * SIXTY_SECONDS);
-        setWordPerMin((Number.isNaN(wpm)) ? 0 : wpm)
+        const wpm = Math.round(totalTypedChars / AVERAGE_WORD / (seconds / SIXTY_SECONDS));
+        setWordPerMin((Number.isNaN(wpm) || !isFinite(wpm)) ? 0 : wpm)
     }
 
     const isCharCorrect = () => {
