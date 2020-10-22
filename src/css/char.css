@@ -1,9 +1,9 @@
-.correctChar {
+.correct-char {
     color: #6863ce;
     font-family: 'Raleway', sans-serif;
 }
 
-.incorrectChar {
+.incorrect-char {
     color: #ff554C;
     text-decoration: line-through;
     font-family: 'Raleway', sans-serif;

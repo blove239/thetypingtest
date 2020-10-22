@@ -3,10 +3,9 @@ import Title from './Components/Title';
 import Stats from './Components/Stats';
 import TimerCircle from './Components/TimerCircle';
 import WordList from './Components/WordList';
-import randomWords from 'random-words';
 import Footer from './Components/Footer';
-import { TEST_WORDS } from './utils/constants'
-
+import { TEST_WORDS, KEYCODE_BACKSPACE, KEYCODE_SPACEBAR, KEYCODE_A, KEYCODE_Z } from './utils/constants'
+import randomWords from 'random-words';
 import './App.css';
 
 const App = () => {
@@ -48,7 +47,7 @@ const App = () => {
     }
   }
 
-  const onSpacebar = (e) => {
+  const onSpacebar = () => {
     if (testWords[currentWordNum].length <= userInputWords[currentWordNum].length) {
       setUserInputWords([...userInputWords, '']);
       setCurrentWordNum(currentWordNum + 1);
@@ -63,21 +62,19 @@ const App = () => {
     setUserInputWords(userInputs);
   }
 
-  const handleOnKeyPress = (e) => {
+  const handleOnKeyDown = (e) => {
     if (!isTestActive) {
       setIsTestActive(true);
       setResetTestWords(false);
     }
-    if (e.key === ' ') {
-      onSpacebar(e);
-    } else {
-      onUserInput(e);
-    }
-  }
-
-  const handleOnKeyDown = (e) => {
-    if (e.key === "Backspace") {
+    if (e.keyCode === KEYCODE_BACKSPACE) {
       onDeletion(e);
+    }
+    if (e.keyCode === KEYCODE_SPACEBAR) {
+      onSpacebar();
+    }
+    if (e.keyCode >= KEYCODE_A && e.keyCode <= KEYCODE_Z) {
+      onUserInput(e);
     }
   }
 
@@ -90,7 +87,6 @@ const App = () => {
       <input
         className='input'
         ref={typingArea}
-        onKeyPress={handleOnKeyPress}
         onKeyDown={handleOnKeyDown}
         type='text'
         disabled={isTestDone}
@@ -126,7 +122,7 @@ const App = () => {
             />
           </div>
         </div>
-        <Footer />
+        <Footer/>
       </div>
     </div>
   )

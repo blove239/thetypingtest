@@ -1,26 +1,38 @@
 .app {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
+  display: table;
   background-color: #1e1e1e;
 }
 
+
 .app-container {
-  width: 75%;
-  margin: 5%;
+  margin-left:auto; 
+  margin-right:auto;
+  width: 80%;
+  margin-top: 14vh;
 }
 
 @media only screen and (max-width: 768px) {
   .app-container {
-    font-size: 0.9em;
-    height: 70%;
+    font-size: .7em;
+    margin-top: 10px;
+  }
+  
+  .stat-container {
+    width:60%
+  }
+  .text {
+    font-size: 9pt;
+  }
+  .value {
+    font-size: 20pt;
   }
 }
 
 @media only screen and (min-width: 992px) {
   .app-container {
-    width: 60%;
+    width: 40%;
   }
 }
 
@@ -31,13 +43,14 @@
 
 .row {
   display: flex;
-  margin: 0px 20px 0px 20px;
+  margin: 0px 10px 0px 10px;
 }
 
 .column {
-  flex: 50%;
-  margin: 10px;
-  display: flex;
+  flex: 100%;
+  width: 50%;
+  margin: 5px;
+  display: grid;
   justify-content: center;
   align-items: center;
 }

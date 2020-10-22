@@ -16,7 +16,7 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
   const prevUserInputWordsRef = useRef();
   const prevCurrentWordNumRef = useRef();
   useEffect(() => {
-    prevUserInputWordsRef.current = userInputWords[currentWordNum];
+    prevUserInputWordsRef.current = userInputWords;
     prevCurrentWordNumRef.current = currentWordNum;
   }, [userInputWords, currentWordNum])
 
@@ -24,28 +24,30 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
   const prevCurrentWordNum = prevCurrentWordNumRef.current;
 
   const updateCharStyles = () => {
-    if (userInputWords[currentWordNum].length <= word.length && isTestActive) {
+    if (userInputWords.length <= word.length && isTestActive) {
       const newChars = chars.map((charInstance, i) => {
-        const inputChar = userInputWords[currentWordNum][i];
+        const inputChar = userInputWords[i];
         const newChar = {
           ...charInstance,
           style: 'default'
         };
         if (charInstance.char === inputChar) {
-          newChar.style = 'correctChar'
+          newChar.style = 'correct-char'
         } else if (inputChar && inputChar !== charInstance.char) {
-          newChar.style = 'incorrectChar'
+          newChar.style = 'incorrect-char'
         }
         return newChar;
       })
       setChars(newChars);
-    } if (userInputWords[currentWordNum].length >= word.length &&
-      (prevUserInputWords.length > userInputWords[currentWordNum].length)) {
+    }
+    if (userInputWords.length >= word.length &&
+      (prevUserInputWords.length > userInputWords.length)) {
       setChars(chars => chars.slice(0, -1))
-    } else if (userInputWords[currentWordNum].length > word.length) {
+    }
+    else if (userInputWords.length > word.length) {
       setChars(chars => chars.concat({
-        char: userInputWords[currentWordNum].slice(-1),
-        style: 'incorrectChar',
+        char: userInputWords.slice(-1),
+        style: 'incorrect-char',
         key: chars.length
       }))
     }

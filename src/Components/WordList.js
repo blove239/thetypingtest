@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Word from './Word';
 import '../css/wordlist.css';
 
@@ -12,7 +12,7 @@ const WordList = ({ userInputWords, currentWordNum, testWords, resetTestWords: r
                 isCurrentWord={isCurrent}
                 currentWordNum={currentWordNum}
                 resetTestState={resetTestState}
-                userInputWords={userInputWords}
+                userInputWords={userInputWords[currentWordNum]}
                 isTestActive={isTestActive}
             />
         )

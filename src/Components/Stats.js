@@ -3,7 +3,7 @@ import { SIXTY_SECONDS } from '../utils/constants'
 import '../css/stats.css';
 
 const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, resetTestState }) => {
-    const [wordPerMin, setWordPerMin] = useState(0);
+    const [ wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
     const [totalCorrectChars, setTotalCorrectChars] = useState(0);
@@ -12,8 +12,8 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
         let interval = null;
         if (isTestActive) {
             interval = setInterval(() => {
-                setSeconds(seconds => seconds + 0.1);
-            }, 100);
+                setSeconds(seconds => seconds + 0.05);
+            }, 50);
         }
         return () => clearInterval(interval);
     }, [seconds, isTestActive]);
@@ -57,16 +57,17 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     return (
         <div>
-            <div className='statHolder'>
-                <div className='statBoxes'>
-                    <div className='stat-heading'>Words Per Minute</div>
+            <div className='stat-container'>
+                <div className='stat-boxes'>
+                    <div className='stat-heading'>Words Per Min.</div>
                     {wordPerMin}
                 </div>
             </div>
-            <div className='statHolder'>
-                <div className='statBoxes'>
+            <div className='stat-container'>
+                <div className='stat-boxes'>
                     <div className='stat-heading'>Accuracy</div>
-                    {totalTypedChars === 0 ? 0 : Math.round((totalCorrectChars / totalTypedChars) * 100)}%
+                    {totalTypedChars === 0 ? 0 : Math.round((totalCorrectChars / totalTypedChars) * 100)}
+                    <span className='percent-sign'>%</span>
                 </div>
             </div>
         </div>

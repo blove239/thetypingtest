@@ -4,7 +4,8 @@
     box-shadow: 0 0 .3em .3em #1e1e1e;
     border-radius: 100%;
     display: flex;
-    justify-content: center;
+    position: relative;
+    top: -57px;
   }
   
 .timer {
@@ -16,10 +17,11 @@
   
 .text {
     color: #ffffff;
+    font-size: 15pt;
   }
   
 .value {
-    font-size: 50px;
+    font-size: 32pt;
   }
   
 .reset-button{
@@ -28,7 +30,12 @@
     border-radius: 100%;
     color: #ffffff;
     background-color: #1e1e1e;
-    font-size: 14pt;
+    font-size: 1.2em;
+    transition-duration: 0.4s;
+  }
+  
+.reset-button:hover {
+    background-color: #3a3a3a;
   }
 
   

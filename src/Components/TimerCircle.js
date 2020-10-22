@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SIXTY_SECONDS } from '../utils/constants'
+import React, { useEffect, useState } from 'react';
+import { SIXTY_SECONDS, SMALL_SIZE, LARGE_SIZE } from '../utils/constants'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import '../css/timercircle.css';
 
@@ -26,6 +26,21 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
     setKey(key => key + 1);
   }
 
+  const [timerSize, setTimerSize] = useState(window.matchMedia("(max-width: 768px)").matches
+    ? SMALL_SIZE : LARGE_SIZE);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        setTimerSize(SMALL_SIZE);
+      } else {
+        setTimerSize(LARGE_SIZE);
+      }
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+  })
+
   return (
     <div className="timer-wrapper">
       <CountdownCircleTimer
@@ -37,6 +52,7 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
           ['#FFD300', 0.415],
           ['#FF554c', 0.17],
         ]}
+        size={timerSize}
         onComplete={() => testComplete()}
       >
         {<RenderTime
