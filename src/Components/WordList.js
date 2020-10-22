@@ -7,7 +7,7 @@ const WordList = ({ userInputWords, currentWordNum, testWords, resetTestWords: r
         return (
             <Word
                 key={key}
-                index={key}
+                  index={key}
                 word={word}
                 isCurrentWord={isCurrent}
                 currentWordNum={currentWordNum}
