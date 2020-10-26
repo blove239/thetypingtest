@@ -59,8 +59,7 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
     }
     if (isCurrentWord) {
       scrollRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+        block: 'center'
       });
     }
     if (isCurrentWord && prevCurrentWordNum === currentWordNum) {
@@ -99,6 +98,6 @@ const areEqual = (prevProps, nextProps) => {
   } else {
     return true;
   }
-}
+};
 
 export default memo(Word, areEqual);
