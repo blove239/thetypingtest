@@ -75,5 +75,4 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
     );
 }
 
-
 export default Stats;

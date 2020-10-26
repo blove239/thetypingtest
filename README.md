@@ -1,6 +1,6 @@
 # Typing Test
 
-A typing test created with React. This is my first React project, and I learned a lot about React on the way.
+A typing test created with React. This was my first React project.
 
 ## Installation
 

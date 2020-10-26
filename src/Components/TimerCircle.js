@@ -5,33 +5,36 @@ import '../css/timercircle.css';
 
 const RenderTime = ({ remainingTime, resetTest, resetCircle }) => {
   if (remainingTime === 0) {
-    return <button className='reset-button'
+    return (
+    <button className='reset-button'
       onMouseDown={(e) => {
         e.preventDefault();
-        resetTest();
+        resetTest();  
         resetCircle();
       }}> Click Here to Start Over! </button>
+    );
+  } else {
+    return (
+      <div className='timer'>
+        <div className='value'>{remainingTime}</div>
+        <div className='text'>seconds</div>
+      </div>
+    );
   }
-  return (
-    <div className="timer">
-      <div className="value">{remainingTime}</div>
-      <div className="text">seconds</div>
-    </div>
-  );
 };
 
 const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
   const [key, setKey] = useState(0);
-  const resetCircle = () => {
+  const resetCircle = () => { 
     setKey(key => key + 1);
   }
 
-  const [timerSize, setTimerSize] = useState(window.matchMedia("(max-width: 768px)").matches
+  const [timerSize, setTimerSize] = useState(window.matchMedia('(max-width: 768px)').matches
     ? SMALL_SIZE : LARGE_SIZE);
 
   useEffect(() => {
     function handleResize() {
-      if (window.matchMedia("(max-width: 768px)").matches) {
+      if (window.matchMedia('(max-width: 768px)').matches) {
         setTimerSize(SMALL_SIZE);
       } else {
         setTimerSize(LARGE_SIZE);
@@ -42,7 +45,7 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
   })
 
   return (
-    <div className="timer-wrapper">
+    <div className='timer-wrapper'>
       <CountdownCircleTimer
         key={key}
         isPlaying={isTestActive}
