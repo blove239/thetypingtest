@@ -128,6 +128,7 @@ const App = () => {
               currentWordNum={currentWordNum}
               currentCharNum={currentCharNum}
               isTestActive={isTestActive}
+              isTestDone={isTestDone}
               resetTestState={resetTestState}
             />
           </div>
