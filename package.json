@@ -17,7 +17,8 @@
     "react": "^17.0.0",
     "react-countdown-circle-timer": "^2.3.7",
     "react-dom": "^17.0.0",
-    "react-scripts": "3.4.4"
+    "react-scripts": "3.4.4",
+    "reactjs-popup": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
