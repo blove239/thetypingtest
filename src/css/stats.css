@@ -7,6 +7,19 @@
     box-shadow: 0 0 .3em .3em #1e1e1e;
 }
 
+.leaderboard-button {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 76%;
+    background-color: #1e1e1e;
+    color: white;
+    border-color: #3A3A3A;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 3px;
+
+}
 .stat-boxes {
     flex: 50%;
     margin: 15px;

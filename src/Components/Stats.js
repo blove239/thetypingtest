@@ -6,7 +6,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
 
-const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, isTestDone, resetTestState }) => {
+const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, isTestDone, resetTestState, resetTest }) => {
     const [wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
@@ -61,8 +61,27 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     return (
         <div>
-            <Popup open={isTestDone} position="right center" modal>
-                <Leaderboard/>
+            <Popup 
+            open={isTestDone} p
+            osition='right center' 
+            modal
+            trigger={<button className='leaderboard-button'> Leaderboard </button>}
+            >
+                {close => (
+                    <fragment>
+                        <Leaderboard />
+            
+                        <button
+                            className="button"
+                            onClick={() => {
+                                close();
+                            }}
+                        >
+                            close modal
+                        </button>
+                    </fragment>
+                )
+                }
             </Popup>
             <div className='stat-container'>
                 <div className='stat-boxes'>
