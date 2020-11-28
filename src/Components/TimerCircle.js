@@ -49,7 +49,7 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
       <CountdownCircleTimer
         key={key}
         isPlaying={isTestActive}
-        duration={SIXTY_SECONDS}
+        duration={2}
         colors={[
           ['#4CC053', 0.415],
           ['#FFD300', 0.415],

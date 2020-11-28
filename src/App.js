@@ -63,7 +63,6 @@ const App = () => {
     userInputs[currentWordNum] = userInputs[currentWordNum].concat(char);
     setUserInputWords(userInputs);
   }
-
   const handleOnKeyDown = (e) => {
     if (e.keyCode === KEYCODE_BACKSPACE) {
       onDeletion();

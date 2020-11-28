@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AVERAGE_WORD, SIXTY_SECONDS } from '../utils/constants'
 import '../css/stats.css';
+import Leaderboard from './Leaderboard';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
-const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, resetTestState }) => {
-    const [ wordPerMin, setWordPerMin] = useState(0);
+
+const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, isTestDone, resetTestState }) => {
+    const [wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
     const [totalCorrectChars, setTotalCorrectChars] = useState(0);
@@ -57,6 +61,9 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     return (
         <div>
+            <Popup open={isTestDone} position="right center" modal>
+                <Leaderboard/>
+            </Popup>
             <div className='stat-container'>
                 <div className='stat-boxes'>
                     <div className='stat-heading'>Words Per Min.</div>
