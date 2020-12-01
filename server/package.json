@@ -5,9 +5,15 @@
   "author": "Brandon Love",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "expressjs": "^1.0.1",
     "joi": "^17.3.0",
     "morgan": "^1.10.0",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "nedb-async": "^0.1.5"
+  },
+  "devDependencies": {
+    "ip": "^1.1.5"
   }
 }

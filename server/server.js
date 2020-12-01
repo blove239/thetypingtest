@@ -2,12 +2,18 @@ const Joi = require("joi");
 const express = require("express");
 const nedb = require("nedb-async").AsyncNedb;
 const morgan = require("morgan");
+const cors = require('cors');
+const ip = require('ip');
+const ipAddress = ip.address();
+
+
 
 const PORT = process.env.PORT || 8000;
 const DB_PATH = process.env.DB_PATH || "data.db";
 
 const db = new nedb({ filename: DB_PATH, autoload: true });
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,7 +33,7 @@ const postSchema = Joi.object({
   });
 
   app.listen(PORT, () => {
-    console.log(`[ index.js ] Listening on port ${PORT}`);
+    console.log(`Network access via: ${ipAddress}:${PORT}!`);
   });
   
   app.post("/api/scores", async (req, res, next) => {
@@ -43,3 +49,13 @@ const postSchema = Joi.object({
       next(err);
     }
   });
+
+
+app.get("/api/scores", async (req, res, next) => {
+  try {
+    const data = await db.asyncFind({});
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});

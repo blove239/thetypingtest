@@ -81,7 +81,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                 trigger={<button className='leaderboard-button'> Leaderboard </button>}
             >
                 {close => (
-                    <fragment>
+                    <React.Fragment>
                         <Leaderboard 
                             wordPerMin={wordPerMin}
                             incorrectEntries={incorrectEntries}
@@ -95,7 +95,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                         >
                             close modal
                         </button>
-                    </fragment>
+                    </React.Fragment>
                 )
                 }
             </Popup>
