@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^12.1.9",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-react": "^7.20.0",
+    "public-ip": "^4.0.2",
     "random-words": "^1.1.1",
     "react": "^17.0.0",
     "react-countdown-circle-timer": "^2.3.7",
