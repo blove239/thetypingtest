@@ -85,6 +85,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                         <Leaderboard 
                             wordPerMin={wordPerMin}
                             incorrectEntries={incorrectEntries}
+                            isTestDone={isTestDone}
                         />
 
                         <button
