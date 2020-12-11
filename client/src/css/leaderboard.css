@@ -1,3 +1,15 @@
 .leaderboard-wrapper {
     overflow: auto;
 }
+
+.leaderboard-heading {
+    margin-bottom: 8px;
+}
+.text-bold {
+    font-weight: bold;
+}
+
+.name-valid-warning {
+    color: red;
+    font-size: 0.7em;
+}

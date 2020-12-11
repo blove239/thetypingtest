@@ -7,54 +7,77 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(wordPerMin - incorrectEntries);
-    const [location, setLocation] = useState('Unknown');
+    const [netWPM, setNetWPM] = useState(128);
+    const [ip, setIp] = useState('Unknown');
+    const [isNameLenValid, setIsNameLenValid] = useState(true);
+    const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
+
+    const re = new RegExp(/^[a-z0-9]+$/, 'i')
 
     const getLeaderboard = async () => {
         const response = await fetch('http://localhost:8000/api/scores/');
         const jsonData = await response.json();
-        setLeaderboard(jsonData);
-        setFetchedLeaderboard(true);
+        if (response && !response.error) {
+            setLeaderboard(jsonData)
+            setFetchedLeaderboard(true);
+        }
     };
 
-    const getLocation = async () => {
+    const getIP = async () => {
         const userIp = await publicIp.v4();
-        const response = await fetch(`https://cors-anywhere.herokuapp.com/http://www.geoplugin.net/json.gp?ip=${userIp}`);
-        const jsonData = await response.json();
-        setLocation(jsonData.geoplugin_countryCode);
-        console.log(location);
+        setIp(userIp);
     }
 
     const submitScore = async () => {
-        const postRequestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'https://localhost:8000'
-            },
-            body: JSON.stringify({
-                name: name,
-                netWPM: netWPM,
-                location: location,
-                mobile: isMobile,
-            })
-        };
-        await fetch('http://localhost:8000/api/scores/', postRequestOptions)
-            .then(response => response.json())
-            .then(data => data);
+        if (name.length < 2 || name.length > 64) {
+            setIsNameLenValid(false);
+        }
+        if(re.test(name) !== true) {
+            setIsNameAlphaNum(false);
+        }
+        else {
+            setIsNameLenValid(true);
+            const postRequestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'https://localhost:8000'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    netWPM: netWPM,
+                    location: 'Unknown',
+                    mobile: isMobile,
+                    ip: ip,
+                })
+            };
+            await fetch('http://localhost:8000/api/scores', postRequestOptions)
+                .then(response => response.json())
+                .then(data => data);
+        }
+
     }
 
     useEffect(() => {
         getLeaderboard();
-        getLocation();
-        // empty dependency array means this effect will only run once (like componentDidMount in classes)
+        getIP();
     }, []);
 
     return (
         <div className='leaderboard-wrapper'>
-            <h1>Leaderboard</h1>
-            <h3>Net WPM</h3>
-            {isTestDone ? 
+            <h1 className='leaderboard-heading'>Leaderboard</h1>
+            <div>
+                {fetchedLeaderboard ?
+                    leaderboard.map((x) => {
+                        return (<div>{x.name}</div>)
+                    }) :
+                    null
+                }
+            </div>
+            <h2 className='leaderboard-heading'>Submit your result</h2>
+            <span className='text-bold'>Your Score:</span>
+            <span> {netWPM} Net Words Per Minute (WPM)</span>
+            <p>Enter your name below to submit your result</p>
             <div>
                 <input
                     placeHolder='Your Name'
@@ -62,22 +85,13 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                     value={name}
                     onChange={e => setName(e.target.value)}
                 />
-            NET WPM:
-            {netWPM}
-                {" "}
-                  COUNTRY:{location}
-                {" "}
-                  isMobile: {isMobile ? "TRUE" : "FALSE"}
+
                 <button onClick={submitScore}>SUBMIT</button>
-            </div> : null}
-            <ol>
-                {fetchedLeaderboard ? leaderboard.map((x, index) =>
-                    <li key={index}> Name: {x.name} NetWPM: {x.netWPM} location: {x.location} mobile: {x.mobile ? "TRUE" : "FALSE"} </li>
-                ) : null}
-            </ol>
-
-
-
+                {isNameLenValid ? null :
+                    <div className='name-valid-warning'>Names must be at least two characters and no more than 64 characters in length</div>}
+                {isNameAlphaNum ? null :
+                <div className='name-valid-warning'>Names may only contain alphanumerical characters</div>}
+            </div>
         </div>
     );
 };
