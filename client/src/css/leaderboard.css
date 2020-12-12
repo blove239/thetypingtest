@@ -5,6 +5,13 @@
 .leaderboard-heading {
     margin-bottom: 8px;
 }
+
+.leaderboard-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 .text-bold {
     font-weight: bold;
 }
@@ -12,4 +19,28 @@
 .name-valid-warning {
     color: red;
     font-size: 0.7em;
+}
+
+table, th, td  {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.table-col-1 {
+    width:10%;
+    text-align: center;
+}
+
+.table-col-2 {
+    width:70%;
+}
+
+.table-col-3 {
+    widt#wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }h:20%;
+    text-align: center;
 }

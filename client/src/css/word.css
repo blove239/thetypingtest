@@ -1,3 +1,8 @@
 .current-word {
     background:rgba(127, 196, 90,0.25);
 }
+
+.li-word {
+    margin: 0 7px;
+    display: inline-block;
+}

@@ -11,8 +11,8 @@ const DB_PATH = process.env.DB_PATH || "data.db";
 const pageSize = 10;
 const db = new nedb({ filename: DB_PATH, autoload: true });
 const app = express();
-app.use(cors());
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

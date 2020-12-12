@@ -8,7 +8,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(128);
+    const [netWPM, setNetWPM] = useState(150);
     const [ip, setIp] = useState('Unknown');
     const [isNameLenValid, setIsNameLenValid] = useState(true);
     const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
@@ -16,7 +16,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     const [pageCount, setPageCount] = useState(1);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const re = new RegExp(/^[a-z0-9]+$/, 'i')
-
 
     const getLeaderboard = async () => {
         const response = await fetch(`http://localhost:8000/api/scores/${page}`);
@@ -34,7 +33,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
         }
     }
     const nextPage = () => {
-        if(page < pageCount){
+        if (page < pageCount) {
             setPage(page => page + 1);
         }
     }
@@ -70,6 +69,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
             await fetch('http://localhost:8000/api/scores', postRequestOptions)
                 .then(response => response.json())
                 .then(data => data);
+            getLeaderboard();
         }
 
     }
@@ -85,15 +85,27 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     return (
         <div className='leaderboard-wrapper'>
             <h1 className='leaderboard-heading'>Leaderboard</h1>
-            <div>
-                {fetchedLeaderboard ?
-                    leaderboard.map((x, index) => {
-                        return (<div key={index}>{x.name} {x.netWPM}</div>)
-                    }) :
-                    null
-                }
-            </div>
-            <div>
+            <table className='leaderboard-result-list'>
+                <tbody>
+                    <tr>
+                        <th className='table-col-1'>Position</th>
+                        <th className='table-col-2'>Name</th>
+                        <th className='table-col-3'>Net WPM</th>
+                    </tr>
+                    {fetchedLeaderboard ?
+                        leaderboard.map((x, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td className='table-col-1'>{((page - 1) * 10) + index + 1}</td>
+                                    <td className='table-col-2'>{x.name}</td>
+                                    <td className='table-col-3'>{x.netWPM}</td>
+                                </tr>)
+                        }) :
+                        null
+                    }
+                </tbody>
+            </table>
+            <div className='leaderboard-button-wrapper'>
                 <button onClick={prevPage}>
                     prev
                 </button>
@@ -102,7 +114,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                     next
                 </button>
             </div>
-          
+
             <h2 className='leaderboard-heading'>Submit your result</h2>
             <span className='text-bold'>Your Score:</span>
             <span> {netWPM} Net Words Per Minute (WPM)</span>
