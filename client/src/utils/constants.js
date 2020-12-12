@@ -4,3 +4,4 @@ export const TEST_WORDS = 250;
 export const SMALL_SIZE = 90;
 export const LARGE_SIZE = 150;
 export const KEYCODE_BACKSPACE = 8;
+export const PAGE_SIZE = 10;
