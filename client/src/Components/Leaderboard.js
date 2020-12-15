@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { PAGE_SIZE } from '../utils/constants'
+import React, { useState, useEffect, useRef } from 'react';
+import { NAME_MIN_LEN, NAME_MAX_LEN } from '../utils/constants'
 import { isMobile } from "react-device-detect";
 import publicIp from 'public-ip';
 import '../css/leaderboard.css';
@@ -8,35 +8,25 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(150);
+    const [netWPM, setNetWPM] = useState(1800);
     const [ip, setIp] = useState('Unknown');
     const [isNameLenValid, setIsNameLenValid] = useState(true);
     const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
-    const [page, setPage] = useState(1);
-    const [pageCount, setPageCount] = useState(1);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const re = new RegExp(/^[a-z0-9]+$/, 'i')
+    const [userPostId, setUserPostId] = useState(null);
+    const re = new RegExp(/^[a-z0-9]+$/, 'i');
+
+    const scoreScrollRef = useRef();
 
     const getLeaderboard = async () => {
-        const response = await fetch(`http://localhost:8000/api/scores/${page}`);
+        const response = await fetch('http://localhost:8000/api/scores/');
         const jsonData = await response.json();
         if (response && !response.error) {
-            setLeaderboard(jsonData[0]);
-            setPageCount(Math.ceil(jsonData[1] / PAGE_SIZE));
+            await jsonData.sort((a, b) => (a.netWPM > b.netWPM) ? -1 : 1)
+            setLeaderboard(jsonData);
             setFetchedLeaderboard(true);
         }
     };
-
-    const prevPage = () => {
-        if (page > 1) {
-            setPage(page => page - 1)
-        }
-    }
-    const nextPage = () => {
-        if (page < pageCount) {
-            setPage(page => page + 1);
-        }
-    }
 
     const getIP = async () => {
         const userIp = await publicIp.v4();
@@ -44,14 +34,13 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     }
 
     const submitScore = async () => {
-        if (name.length < 2 || name.length > 64) {
+        if (name.length < NAME_MIN_LEN || name.length > NAME_MAX_LEN) {
             setIsNameLenValid(false);
         }
         if (re.test(name) !== true && name !== '') {
             setIsNameAlphaNum(false);
         }
         else {
-            setIsSubmitted(true);
             const postRequestOptions = {
                 method: 'POST',
                 headers: {
@@ -68,14 +57,22 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
             };
             await fetch('http://localhost:8000/api/scores', postRequestOptions)
                 .then(response => response.json())
-                .then(data => data);
-            getLeaderboard();
+                .then(data => setUserPostId(data));
+            await getLeaderboard();
+            setIsSubmitted(true);
         }
-
     }
+
+    const executeScroll = () => scoreScrollRef.current.scrollIntoView({
+        block: "nearest",
+        inline: "start"
+    });
+
     useEffect(() => {
-        getLeaderboard();
-    }, [page]);
+        if (isSubmitted) {
+            executeScroll();
+        }
+    }, [isSubmitted])
 
     useEffect(() => {
         getLeaderboard();
@@ -85,7 +82,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     return (
         <div className='leaderboard-wrapper'>
             <h1 className='leaderboard-heading'>Leaderboard</h1>
-            <table className='leaderboard-result-list'>
+            <table className='leaderboard-results'>
                 <tbody>
                     <tr>
                         <th className='table-col-1'>Position</th>
@@ -93,27 +90,33 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                         <th className='table-col-3'>Net WPM</th>
                     </tr>
                     {fetchedLeaderboard ?
-                        leaderboard.map((x, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td className='table-col-1'>{((page - 1) * 10) + index + 1}</td>
-                                    <td className='table-col-2'>{x.name}</td>
-                                    <td className='table-col-3'>{x.netWPM}</td>
-                                </tr>)
-                        }) :
-                        null
+                        leaderboard.map((data, index) => {
+                            console.log(data._id)
+                            console.log(userPostId === null ? 'its null' : 'its not bul')
+                            if (userPostId !== null && data._id === userPostId.message) {
+                                console.log("POSTID")
+                                return (
+                                    <tr ref={scoreScrollRef} key={index}>
+                                        <td className='table-col-1'>{index + 1}</td>
+                                        <td className='table-col-2'>{data.name}</td>
+                                        <td className='table-col-3'>{data.netWPM}</td>
+                                    </tr>)
+                            } else {
+                                console.log("cheese")
+                                return (
+                                    <tr key={index}>
+                                        <td className='table-col-1'>{index + 1}</td>
+                                        <td className='table-col-2'>{data.name}</td>
+                                        <td className='table-col-3'>{data.netWPM}</td>
+                                    </tr>)
+                            }
+
+
+                        })
+                        : null
                     }
                 </tbody>
             </table>
-            <div className='leaderboard-button-wrapper'>
-                <button onClick={prevPage}>
-                    prev
-                </button>
-                {page}/{pageCount}
-                <button onClick={nextPage}>
-                    next
-                </button>
-            </div>
 
             <h2 className='leaderboard-heading'>Submit your result</h2>
             <span className='text-bold'>Your Score:</span>
