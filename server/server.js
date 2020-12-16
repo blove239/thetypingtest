@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const express = require("express");
-const nedb = require("nedb-async").AsyncNedb;
+const nedb = require("nedb");
 const morgan = require("morgan");
 const ip = require('ip');
 const ipAddress = ip.address();
@@ -12,7 +12,7 @@ const pageSize = 10;
 const db = new nedb({ filename: DB_PATH, autoload: true });
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,35 +37,41 @@ app.listen(PORT, () => {
 
 
 app.post("/api/scores", async (req, res, next) => {
-  let userScoreId;
-  const setUserScoreId = (doc) => {
-    return doc;
-  }
-
   try {
     const { name, netWPM, location, mobile, ip } = req.body;
 
     const input = { name, netWPM, location, mobile, ip };
 
     await postSchema.validateAsync(input);
-    await db.asyncInsert(input)
-      .then(function (newDoc) {
-        userScoreId = setUserScoreId(newDoc._id);
-      })
-      .catch(function (err) { })
+    const userScoreId = await asyncInsert(input);
     res.status(200).send({ message: userScoreId });
   } catch (err) {
     next(err);
   }
 });
 
-
 app.get("/api/scores/", async (req, res, next) => {
   try {
-    const data = await db.asyncFind({});
-    console.log(data);
+    const data = await asyncFind();
     res.send(data);
-    } catch (err) {
+  } catch (err) {
     next(err);
   }
 });
+
+function asyncInsert(input) {
+  return new Promise(resolve => {
+    db.insert(input, function (err, newDoc) {
+      return resolve(newDoc._id);
+    })
+  })
+}
+
+function asyncFind() {
+  return new Promise(resolve => {
+    db.find({}).sort({ netWPM: -1 }).exec(function (err, docs) {
+      docs.forEach(doc => delete doc.ip)
+      return resolve(docs);
+    });
+  })
+}

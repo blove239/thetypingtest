@@ -8,24 +8,30 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(1800);
+    const [netWPM, setNetWPM] = useState(1  );
     const [ip, setIp] = useState('Unknown');
     const [isNameLenValid, setIsNameLenValid] = useState(true);
     const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [userPostId, setUserPostId] = useState(null);
+    const [cannotConnect, setCannotConnect] = useState(false);
     const re = new RegExp(/^[a-z0-9]+$/, 'i');
 
     const scoreScrollRef = useRef();
 
     const getLeaderboard = async () => {
-        const response = await fetch('http://localhost:8000/api/scores/');
-        const jsonData = await response.json();
-        if (response && !response.error) {
-            await jsonData.sort((a, b) => (a.netWPM > b.netWPM) ? -1 : 1)
-            setLeaderboard(jsonData);
-            setFetchedLeaderboard(true);
+        try {
+            const response = await fetch('http://localhost:8000/api/scores/');
+            const jsonData = await response.json();
+            if (response && !response.error) {
+                setLeaderboard(jsonData);
+                setFetchedLeaderboard(true);
+            }
+        } catch(err){
+            setCannotConnect(true);
         }
+       
     };
 
     const getIP = async () => {
@@ -55,11 +61,17 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                     ip: ip,
                 })
             };
+            setSubmitting(true);
             await fetch('http://localhost:8000/api/scores', postRequestOptions)
                 .then(response => response.json())
-                .then(data => setUserPostId(data));
+                .then((data) => {
+                    setUserPostId(data)
+                }
+                );
             await getLeaderboard();
+            setSubmitting(false);
             setIsSubmitted(true);
+
         }
     }
 
@@ -81,7 +93,33 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
 
     return (
         <div className='leaderboard-wrapper'>
+            {isSubmitted ? null : <>
+                <h2 className='leaderboard-heading'>Submit your result</h2>
+                <span className='text-bold'>Your Score:</span>
+                <span> {netWPM} Net Words Per Minute (WPM)</span>
+                <p>Enter your name below to submit your result</p>
+                <div>
+                    <input
+                        placeholder='Your Name'
+                        type='text'
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+
+                    <button
+                        onClick={submitScore}
+                        disabled={submitting}
+                    >
+                        SUBMIT
+                </button>
+                    {isNameLenValid ? null :
+                        <div className='name-valid-warning'>Names must be at least two characters and no more than 64 characters in length</div>}
+                    {isNameAlphaNum ? null :
+                        <div className='name-valid-warning'>Names may only contain alphanumerical characters</div>}
+                </div>
+            </>}
             <h1 className='leaderboard-heading'>Leaderboard</h1>
+            {cannotConnect ? <div>Cannot connect to the leaderboard, please try again later! </div> : null}
             <table className='leaderboard-results'>
                 <tbody>
                     <tr>
@@ -89,12 +127,10 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                         <th className='table-col-2'>Name</th>
                         <th className='table-col-3'>Net WPM</th>
                     </tr>
+                    
                     {fetchedLeaderboard ?
                         leaderboard.map((data, index) => {
-                            console.log(data._id)
-                            console.log(userPostId === null ? 'its null' : 'its not bul')
                             if (userPostId !== null && data._id === userPostId.message) {
-                                console.log("POSTID")
                                 return (
                                     <tr ref={scoreScrollRef} key={index}>
                                         <td className='table-col-1'>{index + 1}</td>
@@ -102,7 +138,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                                         <td className='table-col-3'>{data.netWPM}</td>
                                     </tr>)
                             } else {
-                                console.log("cheese")
                                 return (
                                     <tr key={index}>
                                         <td className='table-col-1'>{index + 1}</td>
@@ -117,25 +152,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone }) => {
                     }
                 </tbody>
             </table>
-
-            <h2 className='leaderboard-heading'>Submit your result</h2>
-            <span className='text-bold'>Your Score:</span>
-            <span> {netWPM} Net Words Per Minute (WPM)</span>
-            <p>Enter your name below to submit your result</p>
-            <div>
-                <input
-                    placeholder='Your Name'
-                    type='text'
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                />
-
-                <button onClick={submitScore}>SUBMIT</button>
-                {isNameLenValid ? null :
-                    <div className='name-valid-warning'>Names must be at least two characters and no more than 64 characters in length</div>}
-                {isNameAlphaNum ? null :
-                    <div className='name-valid-warning'>Names may only contain alphanumerical characters</div>}
-            </div>
         </div>
     );
 };
