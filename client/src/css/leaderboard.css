@@ -1,19 +1,23 @@
-.leaderboard-wrapper {
-    overflow-y: scroll;
-    height:80vh;
-}
-
 .leaderboard-heading {
     margin-bottom: 8px;
 }
 
-.leaderboard-results-wrapper {
-    overflow-y: scroll;
-    height: 300px;
+.leaderboard-sub-heading {
+    margin: 0;
 }
 
 .text-bold {
     font-weight: bold;
+}
+
+.submit-button {
+    font-size: 1.5em;
+    color: white;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
 }
 
 .name-valid-warning {
@@ -39,4 +43,37 @@ table, th, td {
 .table-col-3 {
     width: 20%;
     text-align: center;
+}
+
+.align-right {
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 0.25em;
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 7px;
+}
+
+.leaderboard-results{
+    margin: 5px;
+}
+.leaderboard-popup {
+    margin: auto;
+    height: 80vh;
+    background: #1e1e1e;
+    width: 100%;
+    padding: 10px;
+    margin: -10px;
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.name-input {
+    color: white;
+    font-size: 1.5em;
+    background-color: #3A3A3A;
+    border-radius: 5px;
+    width: 75%;
+    border-width: 1px;
+    border-color: #1e1e1e;
 }
