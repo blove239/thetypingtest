@@ -28,9 +28,14 @@
     right: 0px;
     background: none;
     border: none;
+    border-style: none;
     margin: 0;
     padding: 10px;
     cursor: pointer;
+}
+
+.leaderboard-close:focus {
+    outline:none;
 }
 
 .stat-boxes {

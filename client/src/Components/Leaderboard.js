@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NAME_MIN_LEN, NAME_MAX_LEN } from '../utils/constants'
 import { isMobile } from 'react-device-detect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleRight, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import Filter from 'bad-words';
 import publicIp from 'public-ip';
 import '../css/leaderboard.css';
@@ -11,7 +13,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(250);
+    const [netWPM, setNetWPM] = useState(wordPerMin - incorrectEntries);
     const [ip, setIp] = useState('Unknown');
     const [isNameLenValid, setIsNameLenValid] = useState(true);
     const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
@@ -19,7 +21,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     const [submitting, setSubmitting] = useState(false);
     const [userPostId, setUserPostId] = useState(null);
     const [cannotConnect, setCannotConnect] = useState(false);
-    const re = new RegExp(/^[a-z0-9]+$/, 'i');
+    const re = new RegExp(/^[a-z\d\-_\s]+$/, 'i');
 
     const filter = new Filter();
     const scoreScrollRef = useRef();
@@ -35,7 +37,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
         } catch (err) {
             setCannotConnect(true);
         }
-
     };
 
     const getIP = async () => {
@@ -83,18 +84,14 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     }
 
     const executeScroll = () => {
-        if (!scoreScrollRef.current === undefined) {
+        if (!(scoreScrollRef.current === undefined)) {
             scoreScrollRef.current.scrollIntoView({
-                block: "nearest",
-                inline: "start"
             });
         }
     }
 
     useEffect(() => {
-        if (isSubmitted) {
-            executeScroll();
-        }
+        executeScroll();
     }, [isSubmitted]);
 
     useEffect(() => {
@@ -104,7 +101,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
 
     return (
         <div className='leaderboard-popup'>
-            {isSubmitted ? null : <>
+            {(!isSubmitted && isTestDone) ? <>
                 <div className='row '>
                     <div className='column'>
                         <h2 className='leaderboard-sub-heading'>Submit your result</h2>
@@ -127,7 +124,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
                             {isNameLenValid ? null :
                                 <div className='name-valid-warning'>Names must be at least two characters and no more than 32 characters in length</div>}
                             {isNameAlphaNum ? null :
-                                <div className='name-valid-warning'>Names may only contain alphanumerical characters</div>}
+                                <div className='name-valid-warning'>Names may only contain alphanumerical characters, space, _ or -</div>}
                             {isNameClean ? null :
                                 <div className='name-valid-warning'>Names may not contain profanities.</div>}
                         </form>
@@ -143,7 +140,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
 
                     </div>
                 </div>
-            </>}
+            </> : null}
             <h1 className='leaderboard-heading'>Leaderboard</h1>
             {cannotConnect ? <div>Cannot connect to the leaderboard, please try again later! </div> : null}
             <table className='leaderboard-results'>
@@ -151,14 +148,13 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
                     <tr>
                         <th className='table-col-1'>Position</th>
                         <th className='table-col-2'>Name</th>
-                        <th className='table-col-3'>Net WPM</th>
+                        <th className='table-col-3'>Net WPM <NetWPMToolTip /></th>
                     </tr>
-
                     {fetchedLeaderboard ?
                         leaderboard.map((data, index) => {
                             if (userPostId !== null && data._id === userPostId.message) {
                                 return (
-                                    <tr ref={scoreScrollRef} key={index}>
+                                    <tr className='current-score' ref={scoreScrollRef} key={index}>
                                         <td className='table-col-1'>{index + 1}</td>
                                         <td className='table-col-2'>{data.name}</td>
                                         <td className='table-col-3'>{data.netWPM}</td>
@@ -181,5 +177,15 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
         </div>
     );
 };
+
+const NetWPMToolTip = () => (
+    <Popup
+        nested
+        modal
+        trigger={<button className='netWPM-tooltip-button'> <FontAwesomeIcon icon={faQuestionCircle}/> </button>}
+    >
+        <div> Net words per minute is determined by measuring a typist's gross speed in words per minute and subtracting the number of uncorrected errors made during that period.</div>
+    </Popup>
+);
 
 export default Leaderboard;

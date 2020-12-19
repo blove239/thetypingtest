@@ -31,6 +31,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
             setSeconds(0);
             setTotalTypedChars(0);
             setTotalCorrectChars(0);
+            setIsSubmitted(false);
         }
         calcInCorrectEntires();
         calcWPM();
@@ -81,6 +82,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
             <Popup
                 open={isTestDone}
                 modal
+                nested
                 className='my-popup'
                 trigger={<button className='leaderboard-button'> Leaderboard </button>}
             >

@@ -1,5 +1,6 @@
 .leaderboard-heading {
     margin-bottom: 8px;
+    margin-left: 8px;
 }
 
 .leaderboard-sub-heading {
@@ -34,15 +35,18 @@ table, th, td {
 .table-col-1 {
     width: 10%;
     text-align: center;
+    padding:3px;
 }
 
 .table-col-2 {
     width: 70%;
+    padding:3px;
 }
 
 .table-col-3 {
     width: 20%;
     text-align: center;
+    padding:3px;
 }
 
 .align-right {
@@ -56,6 +60,11 @@ table, th, td {
 .leaderboard-results{
     margin: 5px;
 }
+
+.current-score{
+    background-color: #ff9500;
+}
+
 .leaderboard-popup {
     margin: auto;
     height: 80vh;
@@ -63,7 +72,7 @@ table, th, td {
     width: 100%;
     padding: 10px;
     margin: -10px;
-    color: rgb(255, 255, 255);
+    color: white;
     border-radius: 5px;
     overflow-y: scroll;
 }
@@ -76,4 +85,21 @@ table, th, td {
     width: 75%;
     border-width: 1px;
     border-color: #1e1e1e;
+}
+.netWPM-tooltip{
+    border-radius: 25px;
+}
+
+.netWPM-tooltip-button{
+    background: none;
+    color:white;
+    border: none;
+    border-style: none;
+    margin: 0;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.netWPM-tooltip-button:focus {
+    outline:none;
 }

@@ -32,7 +32,8 @@ app.use(
 );
 
 const postSchema = Joi.object({
-  name: Joi.string().alphanum().min(2).max(32).required(),
+  name: Joi.string().pattern(new RegExp(/^[a-z\d\-_\s]+$/,'i'))
+  .min(2).max(32).required(),
   netWPM: Joi.number().integer().required(),
   location: Joi.string().required(),
   mobile: Joi.boolean().required(),
