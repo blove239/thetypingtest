@@ -5,14 +5,17 @@ const morgan = require("morgan");
 const ip = require('ip');
 const ipAddress = ip.address();
 const cors = require('cors');
+const path = require('path');
 
 const PORT = process.env.PORT || 8000;
-const DB_PATH = process.env.DB_PATH || "data.db";
+const DB_PATH = process.env.DB_PATH || 'data.db';
 const db = new nedb({ filename: DB_PATH, autoload: true });
 db.ensureIndex({ fieldName: 'netWPM' }, function (err) {
 });
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 const corsOptions = {
   origin: 'http://localhost:3000',

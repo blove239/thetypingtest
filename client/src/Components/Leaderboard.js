@@ -40,8 +40,13 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     };
 
     const getIP = async () => {
-        const userIp = await publicIp.v4();
-        setIp(userIp);
+        try {
+            const userIp = await publicIp.v4();
+            setIp(userIp);
+        }
+        catch (err) {
+            setCannotConnect(true);
+        }
     }
 
     const submitScore = async (e) => {
@@ -60,7 +65,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://localhost:8000'
                 },
                 body: JSON.stringify({
                     name: name,
@@ -72,14 +76,21 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
             };
             setSubmitting(true);
             setFetchedLeaderboard(false);
-            await fetch('http://localhost:8000/api/scores', postRequestOptions)
-                .then(response => response.json())
-                .then((data) => {
-                    setUserPostId(data)
-                });
-            await getLeaderboard();
-            setSubmitting(false);
-            setIsSubmitted(true);
+            try {
+                await fetch('http://localhost:8000/api/scores/', postRequestOptions)
+                    .then(response => response.json())
+                    .then((data) => {
+                        setUserPostId(data)
+                    });
+                await getLeaderboard();
+                setSubmitting(false);
+                setIsSubmitted(true);
+            }
+            catch (err) {
+                setIsSubmitted(false);
+
+            }
+
         }
     }
 
@@ -182,9 +193,9 @@ const NetWPMToolTip = () => (
     <Popup
         nested
         modal
-        trigger={<button className='netWPM-tooltip-button'> <FontAwesomeIcon icon={faQuestionCircle}/> </button>}
+        trigger={<button className='netWPM-tooltip-button'> <FontAwesomeIcon icon={faQuestionCircle} /> </button>}
     >
-        <div> Net words per minute is determined by measuring a typist's gross speed in words per minute and subtracting the number of uncorrected errors made during that period.</div>
+        <div> Net words per minute is determined by measuring a typist's gross speed in words per minute and subtracting any uncorrected errors made during that period.</div>
     </Popup>
 );
 
