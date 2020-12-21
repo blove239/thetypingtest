@@ -37,7 +37,7 @@ To build optimized client build:
 
 yarn build
 
-Check out my deployment [here](typingtest.brandonlove.ca).
+Check out my deployment [here](http://typingtest.brandonlove.ca).
 
 ## Licence
 
