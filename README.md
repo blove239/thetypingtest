@@ -29,7 +29,7 @@ node server.js
 Note: Environment variables for client and server will need to be updated. For the client,
 REACT_APP_API_URL needs to be pointed at the Node.js server.
 
-HOMEPAGE in the server .env file needs to pointed at the origin of URL of the client.
+HOMEPAGE in the server .env file needs to pointed at the origin URL of the client.
 
 ## Deployment
 
