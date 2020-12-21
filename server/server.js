@@ -2,10 +2,9 @@ const Joi = require("joi");
 const express = require("express");
 const nedb = require("nedb");
 const morgan = require("morgan");
-const ip = require('ip');
-const ipAddress = ip.address();
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 8000;
 const DB_PATH = process.env.DB_PATH || 'data.db';
@@ -14,11 +13,10 @@ db.ensureIndex({ fieldName: 'netWPM' }, function (err) {
 });
 
 const app = express();
-
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: process.env.HOMEPAGE,
   optionsSuccessStatus: 200
 }
 
@@ -44,7 +42,7 @@ const postSchema = Joi.object({
 });
 
 app.listen(PORT, () => {
-  console.log(`Network access via: ${ipAddress}:${PORT}!`);
+  console.log(`Network access via PORT: ${PORT}!`);
 });
 
 
