@@ -34,6 +34,7 @@ HOMEPAGE in the server .env file needs to pointed at the origin URL of the clien
 ## Deployment
 
 To build optimized client build:
+
 yarn build
 
 ## Licence
