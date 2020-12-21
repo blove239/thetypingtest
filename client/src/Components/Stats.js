@@ -95,7 +95,6 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                             isSubmitted={isSubmitted}
                             setIsSubmitted={setIsSubmitted}
                         />
-
                         <button
                             className="leaderboard-close"
                             type='submit'
@@ -106,8 +105,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                             <FontAwesomeIcon icon={faTimesCircle} />
                         </button>
                     </div>
-                )
-                }
+                )}
             </Popup>
             <div className='stat-container'>
                 <div className='stat-boxes'>
@@ -122,9 +120,7 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                     <span className='percent-sign'>%</span>
                 </div>
             </div>
-
         </div>
-
     );
 }
 

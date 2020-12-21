@@ -13,7 +13,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     const [leaderboard, setLeaderboard] = useState(null);
     const [fetchedLeaderboard, setFetchedLeaderboard] = useState(false)
     const [name, setName] = useState('');
-    const [netWPM, setNetWPM] = useState(wordPerMin - incorrectEntries);
+    const [netWPM] = useState(wordPerMin - incorrectEntries);
     const [ip, setIp] = useState('Unknown');
     const [isNameLenValid, setIsNameLenValid] = useState(true);
     const [isNameAlphaNum, setIsNameAlphaNum] = useState(true);
@@ -21,14 +21,14 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     const [submitting, setSubmitting] = useState(false);
     const [userPostId, setUserPostId] = useState(null);
     const [cannotConnect, setCannotConnect] = useState(false);
+    
     const re = new RegExp(/^[a-z\d\-_\s]+$/, 'i');
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const filter = new Filter();
-    const scoreScrollRef = useRef();
 
     const getLeaderboard = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/scores/');
+            const response = await fetch(API_URL);
             const jsonData = await response.json();
             if (response && !response.error) {
                 setLeaderboard(jsonData);
@@ -77,7 +77,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
             setSubmitting(true);
             setFetchedLeaderboard(false);
             try {
-                await fetch('http://localhost:8000/api/scores/', postRequestOptions)
+                await fetch(API_URL, postRequestOptions)
                     .then(response => response.json())
                     .then((data) => {
                         setUserPostId(data)
@@ -88,11 +88,15 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
             }
             catch (err) {
                 setIsSubmitted(false);
-
             }
-
         }
     }
+    
+    useEffect(() => {
+        getLeaderboard();
+        getIP();
+    }, []);
+    const scoreScrollRef = useRef();
 
     const executeScroll = () => {
         if (!(scoreScrollRef.current === undefined)) {
@@ -104,11 +108,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
     useEffect(() => {
         executeScroll();
     }, [isSubmitted]);
-
-    useEffect(() => {
-        getLeaderboard();
-        getIP();
-    }, []);
 
     return (
         <div className='leaderboard-popup'>
@@ -148,7 +147,6 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
                                 <div className='align-right'>Net WPM</div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </> : null}
@@ -178,10 +176,7 @@ const Leaderboard = ({ wordPerMin, incorrectEntries, isTestDone, isSubmitted, se
                                         <td className='table-col-3'>{data.netWPM}</td>
                                     </tr>)
                             }
-
-
-                        })
-                        : null
+                        }) : null
                     }
                 </tbody>
             </table>

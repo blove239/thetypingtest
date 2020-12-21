@@ -42,7 +42,7 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
     }
     handleResize()
     window.addEventListener('resize', handleResize)
-  })
+  });
 
   return (
     <div className='timer-wrapper'>
@@ -65,6 +65,6 @@ const TimerCircle = ({ isTestActive, testComplete, resetTest, isTestDone }) => {
       </CountdownCircleTimer>
     </div>
   );
-}
+};
 
 export default TimerCircle;
