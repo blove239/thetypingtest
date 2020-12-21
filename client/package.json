@@ -2,7 +2,7 @@
   "name": "thetypingtest",
   "version": "1.22.5",
   "private": true,
-  "homepage": "http://blove239.github.io/thetypingtest",
+  "homepage": "http://typingtest.brandonlove.ca/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
@@ -11,21 +11,23 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.9",
+    "bad-words": "^3.0.4",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-react": "^7.20.0",
+    "public-ip": "^4.0.2",
     "random-words": "^1.1.1",
     "react": "^17.0.0",
     "react-countdown-circle-timer": "^2.3.7",
+    "react-device-detect": "^1.14.0",
     "react-dom": "^17.0.0",
-    "react-scripts": "3.4.4"
+    "react-scripts": "4.0.1",
+    "reactjs-popup": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -42,7 +44,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "gh-pages": "^3.1.0"
-  }
+  "devDependencies": {}
 }

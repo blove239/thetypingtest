@@ -77,7 +77,7 @@ const Word = ({ word, isCurrentWord, userInputWords, currentWordNum, resetTestSt
     );
   };
   return (
-    <li ref={scrollRef} className={(isCurrentWord) ? 'current-word' : 'default'}>
+    <li ref={scrollRef} className={(isCurrentWord) ? 'current-word li-word' : 'default li-word'}>
       {chars.map(x => renderChar(x.key, x.char, x.style))}
     </li>
   );

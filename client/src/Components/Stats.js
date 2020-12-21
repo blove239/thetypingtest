@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AVERAGE_WORD, SIXTY_SECONDS } from '../utils/constants'
+import Leaderboard from './Leaderboard';
+import Popup from 'reactjs-popup';
 import '../css/stats.css';
+import 'reactjs-popup/dist/index.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, resetTestState }) => {
-    const [ wordPerMin, setWordPerMin] = useState(0);
+const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, isTestDone, resetTestState, resetTest }) => {
+    const [wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
     const [totalCorrectChars, setTotalCorrectChars] = useState(0);
+    const [incorrectEntries, setInCorrectEntries] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
         let interval = null;
@@ -24,7 +31,9 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
             setSeconds(0);
             setTotalTypedChars(0);
             setTotalCorrectChars(0);
+            setIsSubmitted(false);
         }
+        calcInCorrectEntires();
         calcWPM();
     }, [userInputWords, seconds, resetTestState])
 
@@ -32,8 +41,21 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
     useEffect(() => {
         prevUserInputWordsRef.current = userInputWords[currentWordNum];
         calcAccuracy();
-    }, [userInputWords])
+    }, [userInputWords]);
+
     const prevUserInputWords = prevUserInputWordsRef.current;
+
+    const calcInCorrectEntires = () => {
+        let currentlyIncorrect = 0;
+        userInputWords.forEach((element, index) => {
+            for (let i = 0; i < element.length; i++) {
+                if (element[i] !== testWords[index][i]) {
+                    currentlyIncorrect += 1;
+                }
+            }
+        });
+        setInCorrectEntries(currentlyIncorrect);
+    }
 
     const calcWPM = () => {
         const wpm = Math.round(totalTypedChars / AVERAGE_WORD / (seconds / SIXTY_SECONDS));
@@ -57,6 +79,34 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     return (
         <div>
+            <Popup
+                open={isTestDone}
+                modal
+                nested
+                className='my-popup'
+                trigger={<button className='leaderboard-button'> Leaderboard </button>}
+            >
+                {close => (
+                    <div>
+                        <Leaderboard
+                            wordPerMin={wordPerMin}
+                            incorrectEntries={incorrectEntries}
+                            isTestDone={isTestDone}
+                            isSubmitted={isSubmitted}
+                            setIsSubmitted={setIsSubmitted}
+                        />
+                        <button
+                            className="leaderboard-close"
+                            type='submit'
+                            onClick={() => {
+                                close();
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faTimesCircle} />
+                        </button>
+                    </div>
+                )}
+            </Popup>
             <div className='stat-container'>
                 <div className='stat-boxes'>
                     <div className='stat-heading'>Words Per Min.</div>
@@ -71,7 +121,6 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
                 </div>
             </div>
         </div>
-
     );
 }
 

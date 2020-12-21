@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/thetypingtest/static/css/main.165ea405.chunk.css",
+    "main.js": "/thetypingtest/static/js/main.9e0d0ce2.chunk.js",
+    "main.js.map": "/thetypingtest/static/js/main.9e0d0ce2.chunk.js.map",
+    "runtime-main.js": "/thetypingtest/static/js/runtime-main.12167ffa.js",
+    "runtime-main.js.map": "/thetypingtest/static/js/runtime-main.12167ffa.js.map",
+    "static/css/2.f1b50ea8.chunk.css": "/thetypingtest/static/css/2.f1b50ea8.chunk.css",
+    "static/js/2.bc016e2d.chunk.js": "/thetypingtest/static/js/2.bc016e2d.chunk.js",
+    "static/js/2.bc016e2d.chunk.js.map": "/thetypingtest/static/js/2.bc016e2d.chunk.js.map",
+    "index.html": "/thetypingtest/index.html",
+    "precache-manifest.faa4f00a2439b463a9d0e961e58f2736.js": "/thetypingtest/precache-manifest.faa4f00a2439b463a9d0e961e58f2736.js",
+    "service-worker.js": "/thetypingtest/service-worker.js",
+    "static/css/2.f1b50ea8.chunk.css.map": "/thetypingtest/static/css/2.f1b50ea8.chunk.css.map",
+    "static/css/main.165ea405.chunk.css.map": "/thetypingtest/static/css/main.165ea405.chunk.css.map",
+    "static/js/2.bc016e2d.chunk.js.LICENSE.txt": "/thetypingtest/static/js/2.bc016e2d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.12167ffa.js",
+    "static/css/2.f1b50ea8.chunk.css",
+    "static/js/2.bc016e2d.chunk.js",
+    "static/css/main.165ea405.chunk.css",
+    "static/js/main.9e0d0ce2.chunk.js"
+  ]
+}
