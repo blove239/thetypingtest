@@ -37,6 +37,9 @@ To build optimized client build:
 
 yarn build
 
+Check out my deployment [here](http://typingtest.brandonlove.ca).
+
 ## Licence
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
