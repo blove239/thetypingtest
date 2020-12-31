@@ -20,8 +20,6 @@ const corsOptions = {
   optionsSuccessStatus: 200
 }
 
-app.use(cors(corsOptions));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -46,7 +44,7 @@ app.listen(PORT, () => {
 });
 
 
-app.post("/api/scores", async (req, res, next) => {
+app.post("/api/scores",cors(corsOptions), async (req, res, next) => {
   try {
     const { name, netWPM, location, mobile, ip } = req.body;
 
@@ -60,7 +58,7 @@ app.post("/api/scores", async (req, res, next) => {
   }
 });
 
-app.get("/api/scores/", async (req, res, next) => {
+app.get("/api/scores/",cors(corsOptions), async (req, res, next) => {
   try {
     const data = await asyncFind();
     res.send(data);
