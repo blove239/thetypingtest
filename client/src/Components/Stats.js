@@ -47,9 +47,9 @@ const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTe
 
     const calcInCorrectEntires = () => {
         let currentlyIncorrect = 0;
-        userInputWords.forEach((element, index) => {
-            for (let i = 0; i < element.length; i++) {
-                if (element[i] !== testWords[index][i]) {
+        userInputWords.forEach((word, index) => {
+            for (let i = 0; i < word.length; i++) {
+                if (word[i] !== testWords[index][i]) {
                     currentlyIncorrect += 1;
                 }
             }
