@@ -1,5 +1,7 @@
 # Typing Test
 
+![Typing Test](https://res.cloudinary.com/dcqt5zx6z/image/upload/v1612481456/Screenshots%20for%20projects/thetypingtestscreenshotmostrecent_b8fqs2.png)
+
 A typing test with leaderboard functionality. Front end uses Reactjs. The backend uses Expressjs, NeDB and is designed to be served using Node. This was my first full stack project!
 
 ## Installation
