@@ -7,7 +7,16 @@ import 'reactjs-popup/dist/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Stats = ({ testWords, userInputWords, currentWordNum, currentCharNum, isTestActive, isTestDone, resetTestState, resetTest }) => {
+const Stats = ({
+  currentCharNum,
+  currentWordNum,
+  isTestActive,
+  isTestDone,
+  resetTest
+  resetTestState,
+  testWords,
+  userInputWords
+}) => {
     const [wordPerMin, setWordPerMin] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [totalTypedChars, setTotalTypedChars] = useState(0);
