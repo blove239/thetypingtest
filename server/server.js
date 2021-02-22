@@ -43,11 +43,9 @@ app.listen(PORT, () => {
   console.log(`Network access via PORT: ${PORT}!`);
 });
 
-
-app.post("/api/scores",cors(corsOptions), async (req, res, next) => {
+app.post("/api/scores", cors(corsOptions), async (req, res, next) => {
   try {
     const { name, netWPM, location, mobile, ip } = req.body;
-
     const input = { name, netWPM, location, mobile, ip };
 
     await postSchema.validateAsync(input);
@@ -58,7 +56,7 @@ app.post("/api/scores",cors(corsOptions), async (req, res, next) => {
   }
 });
 
-app.get("/api/scores/",cors(corsOptions), async (req, res, next) => {
+app.get("/api/scores/", cors(corsOptions), async (req, res, next) => {
   try {
     const data = await asyncFind();
     res.send(data);
