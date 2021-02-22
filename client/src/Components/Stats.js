@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AVERAGE_WORD, SIXTY_SECONDS } from '../utils/constants'
+import { AVERAGE_WORD, SIXTY_SECONDS, POINT_FIVE_SECONDS, FIFTY } from '../utils/constants'
 import Leaderboard from './Leaderboard';
 import Popup from 'reactjs-popup';
 import '../css/stats.css';
@@ -12,7 +12,7 @@ const Stats = ({
   currentWordNum,
   isTestActive,
   isTestDone,
-  resetTest
+  resetTest,
   resetTestState,
   testWords,
   userInputWords
@@ -28,8 +28,8 @@ const Stats = ({
         let interval = null;
         if (isTestActive) {
             interval = setInterval(() => {
-                setSeconds(seconds => seconds + 0.05);
-            }, 50);
+                setSeconds(seconds => seconds + POINT_FIVE_SECONDS);
+            }, FIFTY);
         }
         return () => clearInterval(interval);
     }, [seconds, isTestActive]);
@@ -48,31 +48,38 @@ const Stats = ({
 
     const prevUserInputWordsRef = useRef();
     useEffect(() => {
-        prevUserInputWordsRef.current = userInputWords[currentWordNum];
+        const usersCurrentWord = userInputWords[currentWordNum]
+        prevUserInputWordsRef.current = usersCurrentWord;
         calcAccuracy();
     }, [userInputWords]);
 
     const prevUserInputWords = prevUserInputWordsRef.current;
 
     const calcInCorrectEntires = () => {
-        let currentlyIncorrect = 0;
+        let incorrectCounter = 0;
         userInputWords.forEach((word, index) => {
             for (let i = 0; i < word.length; i++) {
                 if (word[i] !== testWords[index][i]) {
-                    currentlyIncorrect += 1;
+                    incorrectCounter += 1;
                 }
             }
         });
-        setInCorrectEntries(currentlyIncorrect);
+        setInCorrectEntries(incorrectCounter);
     }
 
     const calcWPM = () => {
-        const wpm = Math.round(totalTypedChars / AVERAGE_WORD / (seconds / SIXTY_SECONDS));
+        const typedCharsPerWord = totalTypedChars / AVERAGE_WORD;
+        const secondsPerMinute = seconds / SIXTY_SECONDS;
+
+        const wpm = Math.round(typedCharsPerWord / secondsPerMinute);
+
         setWordPerMin((Number.isNaN(wpm) || !isFinite(wpm)) ? 0 : wpm)
     }
 
     const isCharCorrect = () => {
-        if (userInputWords[currentWordNum].slice(-1) === testWords[currentWordNum][currentCharNum - 1]) {
+        const extractLastCharOfInputWords = userInputWords[currentWordNum].slice(-1);
+
+        if (extractLastCharOfInputWords === testWords[currentWordNum][currentCharNum - 1]) {
             setTotalCorrectChars(totalCorrectChars + 1)
             setTotalTypedChars(totalTypedChars + 1)
         } else {
@@ -81,7 +88,9 @@ const Stats = ({
     }
 
     const calcAccuracy = () => {
-        if (prevUserInputWords !== undefined && !(prevUserInputWords.length > userInputWords[currentWordNum].length)) {
+        const currentHighlightedTypedWordLength = userInputWords[currentWordNum].length;
+
+        if (prevUserInputWords !== undefined && !(prevUserInputWords.length > currentHighlightedTypedWordLength)) {
             isCharCorrect();
         }
     }
